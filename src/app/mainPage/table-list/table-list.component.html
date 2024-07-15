@@ -1,0 +1,38 @@
+<!-- src/app/components/table-list/table-list.component.html -->
+<div class="container mt-4">
+  <h2>Taşınmaz Listesi</h2>
+  <div *ngIf="tasinmazlar.length > 0; else noData">
+    
+    <div class="filter">
+      
+    </div>
+    <table class="table table-striped table-info">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Ada</th>
+          <th scope="col">Parsel</th>
+          <th scope="col">Nitelik</th>
+          <th scope="col">Koordinat Bilgileri</th>
+          <th scope="col">Mahalle ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tasinmaz of tasinmazlar">
+          <td>{{ tasinmaz.id }}</td>
+          <td>{{ tasinmaz.ada }}</td>
+          <td>{{ tasinmaz.parsel }}</td>
+          <td>{{ tasinmaz.nitelik }}</td>
+          <td>{{ tasinmaz.koordinatBilgileri }}</td>
+          <td>{{ tasinmaz.mahalleId }}</td>
+        </tr>
+      </tbody>
+      
+    </table>
+    <button type="button" class="btn btn-outline-info">Info</button>
+  </div>
+  
+  <ng-template #noData>
+    <p>Veri bulunamadı.</p>
+  </ng-template>
+</div>
