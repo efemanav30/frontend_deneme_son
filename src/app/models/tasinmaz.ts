@@ -1,3 +1,5 @@
+import { Mahalle } from "./mahalle";
+
 export class Tasinmaz{
     id:number;
     name: string;
@@ -6,4 +8,5 @@ export class Tasinmaz{
     nitelik: string;
     KoordinatBilgileri: string;
     mahalleId:number;
+    mahalle:Mahalle;
 }

@@ -7,18 +7,6 @@
 }
 
 
-.filter {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-    opacity: .7;
-
-    background: rgb(238,174,202);
-background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,180,233,1) 100%);
-}
 
 
 table {
@@ -35,8 +23,54 @@ table {
     box-shadow: 0 12px 5px rgba(31, 31, 31, .3);
     background: #fafafa;
     text-align: center;
+
 }
 
+.btn1 {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: 65%;
+    transform: translate(-50%, -50%);
+    width: 10%;
+    background-color: rgb(149, 221, 167);
+    font-family: 'Inter', sans-serif;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-radius: 12px 12px 12px 12px;
+
+}
+
+.btn2 {
+
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: 70%;
+    transform: translate(-50%, -50%);
+    width: 10%;
+    background-color: rgb(233, 158, 145);
+    font-family: 'Inter', sans-serif;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-radius: 12px 12px 12px 12px;
+
+}
+
+.btn3 {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: 75%;
+    transform: translate(-50%, -50%);
+    width: 10%;
+    background-color: rgb(225, 245, 155);
+    font-family: 'Inter', sans-serif;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-radius: 12px 12px 12px 12px;
+
+}
 
 th,
 td {
@@ -50,12 +84,7 @@ th {
     font-family: 'Inter', sans-serif;
 }
 
-td{
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+td {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-button{
-    width: 75px; 
-    margin-top: 42%;
-    margin-left: 45%;
-}

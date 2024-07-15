@@ -1,0 +1,51 @@
+<!-- add.component.html -->
+<div class="modal fade" id="addTasinmazModal" tabindex="-1" aria-labelledby="addTasinmazModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addTasinmazModalLabel">Yeni Taşınmaz Ekle</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="isim" class="form-label">İsim</label>
+            <input type="text" class="form-control" id="isim" required>
+          </div>
+          <div class="mb-3">
+            <label for="il" class="form-label">İl</label>
+            <input type="text" class="form-control" id="il" required>
+          </div>
+          <div class="mb-3">
+            <label for="ilce" class="form-label">İlçe</label>
+            <input type="text" class="form-control" id="ilce" required>
+          </div>
+          <div class="mb-3">
+            <label for="mahalle" class="form-label">Mahalle</label>
+            <input type="text" class="form-control" id="mahalle" required>
+          </div>
+          <div class="mb-3">
+            <label for="ada" class="form-label">Ada</label>
+            <input type="text" class="form-control" id="ada" required>
+          </div>
+          <div class="mb-3">
+            <label for="parsel" class="form-label">Parsel</label>
+            <input type="text" class="form-control" id="parsel" required>
+          </div>
+          <div class="mb-3">
+            <label for="nitelik" class="form-label">Nitelik</label>
+            <textarea class="form-control" id="nitelik" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="koordinatBilgileri" class="form-label">Koordinat Bilgileri</label>
+            <input type="text" class="form-control" id="koordinatBilgileri" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+        <button type="button" class="btn btn-primary">Ekle</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -14,7 +14,9 @@ export class TableListComponent implements OnInit {
 
   ngOnInit() {
     this.tasinmazService.getTasinmazlar().subscribe(data=>{
+      console.log('API Response:', data); // Gelen veriyi kontrol edin
       this.tasinmazlar=data;
+      
     });
     
   }

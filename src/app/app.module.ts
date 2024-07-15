@@ -8,6 +8,12 @@ import { TableListComponent } from './mainPage/table-list/table-list.component';
 import { LoginComponent } from './logInPage/login/login.component';
 import {HttpClientModule} from '@angular/common/http';
 import { TasinmazService } from './tasinmaz.service';
+import { AddComponent } from './mainPage/table-list/add/add.component';
+
+
+
+
+
 
 @NgModule({
   declarations: [
@@ -15,12 +21,15 @@ import { TasinmazService } from './tasinmaz.service';
     NavbarComponent,
     TableListComponent,
     LoginComponent,
+    AddComponent,
+   
     
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule
+    
   ],
   providers: [TasinmazService],
   bootstrap: [AppComponent]
