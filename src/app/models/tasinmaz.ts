@@ -6,7 +6,9 @@ export class Tasinmaz{
     ada: string;
     parsel: string;
     nitelik: string;
-    KoordinatBilgileri: string;
+    koordinatBilgileri: string;
     mahalleId:number;
     mahalle:Mahalle;
+  il: number;
+  ilce: number;
 }

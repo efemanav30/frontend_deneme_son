@@ -6,11 +6,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class IlceService {
-  private apiUrl = 'https://localhost:44312/api/ilceler';
+  private apiUrl = 'https://localhost:44312/api/ilce';
 
   constructor(private http: HttpClient) { }
 
   getIlcelerByIlId(ilId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}?ilId=${ilId}`);
+    return this.http.get<any[]>(`${this.apiUrl}`);
   }
 }

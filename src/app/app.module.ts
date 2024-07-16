@@ -9,10 +9,7 @@ import { LoginComponent } from './logInPage/login/login.component';
 import {HttpClientModule} from '@angular/common/http';
 import { TasinmazService } from './tasinmaz.service';
 import { AddComponent } from './mainPage/table-list/add/add.component';
-
-
-
-
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 
 @NgModule({
@@ -21,14 +18,15 @@ import { AddComponent } from './mainPage/table-list/add/add.component';
     NavbarComponent,
     TableListComponent,
     LoginComponent,
-    AddComponent,
+    AddComponent
    
     
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule, ReactiveFormsModule
     
   ],
   providers: [TasinmazService],

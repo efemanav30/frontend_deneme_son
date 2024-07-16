@@ -1,0 +1,26 @@
+/* Form içi düzenlemeler */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%; /* Formun genişliğini tam yap */
+    max-width: 600px; /* Formun maksimum genişliğini belirle */
+}
+
+form select, form input {
+    width: 100%; /* Form elemanlarının genişliğini tam yap */
+    padding: 10px; /* Form elemanlarına padding ekle */
+    border: 1px solid #ccc; /* Kenarlarına ince bir border ekle */
+    border-radius: 5px; /* Köşeleri yuvarla */
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end; /* Butonları sağa hizala */
+    gap: 10px;
+    margin-top: 10px;
+}
+
+form button {
+    padding: 10px 20px; /* Butona padding ekle */
+}

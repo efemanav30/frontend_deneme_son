@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class IlService {
-  private apiUrl = 'https://localhost:44312/api/iller';
+  private apiUrl = 'https://localhost:44312/api/il';
 
   constructor(private http: HttpClient) { }
 
