@@ -10,6 +10,7 @@ import {HttpClientModule} from '@angular/common/http';
 import { TasinmazService } from './tasinmaz.service';
 import { AddComponent } from './mainPage/table-list/add/add.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { UpdateComponent } from './mainPage/table-list/update/update.component';
 
 
 @NgModule({
@@ -18,7 +19,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     NavbarComponent,
     TableListComponent,
     LoginComponent,
-    AddComponent
+    AddComponent,
+    UpdateComponent,
+    
    
     
   ],
@@ -26,7 +29,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule, ReactiveFormsModule
+    FormsModule, ReactiveFormsModule,
+    
     
   ],
   providers: [TasinmazService],

@@ -11,4 +11,5 @@ export class Tasinmaz{
     mahalle:Mahalle;
   il: number;
   ilce: number;
+  selected: boolean;
 }

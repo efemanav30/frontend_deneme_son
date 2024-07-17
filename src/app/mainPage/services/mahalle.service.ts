@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Mahalle } from 'src/app/models/mahalle';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,8 @@ export class MahalleService {
 
   constructor(private http: HttpClient) { }
 
-  getMahallelerByIlceId(ilceId:number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}`);
+  getMahallelerByIlceId(ilceId:number): Observable<Mahalle[]> {
+    return this.http.get<Mahalle[]>(`${this.apiUrl}/by-ilce/${ilceId}`);
   }
+  
 }
