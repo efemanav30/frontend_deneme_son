@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 <app-map></app-map>
-<div class="tablo">
+
   <!-- src/app/components/table-list/table-list.component.html -->
 <div class="container mt-4">
   <h2>Taşınmaz Listesi</h2>
@@ -46,9 +46,13 @@
   <div class="btn-container">
     <button class="btn1" type="button" data-bs-toggle="modal" data-bs-target="#addTasinmazModal">Yeni Taşınmaz Ekle</button>
     <button class="btn2" (click)="deleteSelectedTasinmaz()">Taşınmaz Sil</button>
-    <button class="btn3" type="button" (click)="openUpdateModal()" data-bs-toggle="modal"  data-bs-target="#updateTasinmazModal">Taşınmaz Düzenle</button>
+    <button class="btn3" type="button" (click)="openUpdateModal()">Taşınmaz Düzenle</button>
   </div>
-</div>
+  
+
+
+  
+
 <app-update ></app-update>
 <app-add></app-add>
 </div>

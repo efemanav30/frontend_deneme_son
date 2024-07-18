@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Tasinmaz } from 'src/app/models/tasinmaz';
 import { TasinmazService } from 'src/app/tasinmaz.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UpdateComponent } from './update/update.component';
-//import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-table-list',
   templateUrl: './table-list.component.html',
@@ -10,19 +11,12 @@ import { UpdateComponent } from './update/update.component';
 })
 export class TableListComponent implements OnInit {
   tasinmazlar: Tasinmaz[] = [];
-  modalService: any;
-  constructor(private tasinmazService: TasinmazService,
-    //private ngbModal: NgbModal // NgbModal inject edin
-    ) { }
 
+  constructor(private tasinmazService: TasinmazService,
+              private modalService: NgbModal) { }
 
   ngOnInit() {
-    this.tasinmazService.getTasinmazlar().subscribe(data=>{
-      console.log('API Response:', data); // Gelen veriyi kontrol edin
-      this.tasinmazlar=data;
-      
-    });
-    
+    this.loadTasinmazlar();
   }
 
   loadTasinmazlar() {
@@ -39,14 +33,12 @@ export class TableListComponent implements OnInit {
     });
   }
 
-  
-
   deleteSelectedTasinmaz() {
     const selectedTasinmaz = this.tasinmazlar.find(tasinmaz => tasinmaz.selected);
     if (selectedTasinmaz) {
       this.tasinmazService.deleteTasinmaz(selectedTasinmaz.id).subscribe(() => {
         console.log('Taşınmaz başarıyla silindi:', selectedTasinmaz);
-        this.loadTasinmazlar(); // Taşınmazları yeniden yükleyerek tabloyu güncelle
+        this.loadTasinmazlar();
       }, error => {
         console.error('Taşınmaz silinirken bir hata oluştu:', error);
       });
@@ -74,6 +66,4 @@ export class TableListComponent implements OnInit {
       console.log('Düzenlemek için hiçbir taşınmaz seçilmedi');
     }
   }
-  
 }
-//BURADA OYNAMA YAPILINCA TÜM EKRAN BEYAZ OLUYOR

@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,6 +13,7 @@ import { AddComponent } from './mainPage/table-list/add/add.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { UpdateComponent } from './mainPage/table-list/update/update.component';
 import { MapComponent } from './mainPage/table-list/map/map.component';
+
 
 
 @NgModule({
@@ -32,10 +34,13 @@ import { MapComponent } from './mainPage/table-list/map/map.component';
     AppRoutingModule,
     HttpClientModule,
     FormsModule, ReactiveFormsModule,
+    NgbModule
     
     
   ],
   providers: [TasinmazService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [UpdateComponent] // UpdateComponent'i entryComponents'e ekleyin
+
 })
 export class AppModule { }

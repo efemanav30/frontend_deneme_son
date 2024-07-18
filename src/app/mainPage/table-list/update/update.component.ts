@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TasinmazService } from 'src/app/tasinmaz.service';
 import { IlService } from '../../services/il.service';
@@ -20,7 +20,6 @@ export class UpdateComponent implements OnChanges, OnInit {
   iller: Il[] = [];
   ilceler: Ilce[] = [];
   mahalleler: Mahalle[] = [];
-  updatedTasinmaz: Tasinmaz = new Tasinmaz();
   selectedTasinmaz: Tasinmaz;
 
   constructor(
@@ -37,17 +36,19 @@ export class UpdateComponent implements OnChanges, OnInit {
       ada: ['', Validators.required],
       parsel: ['', Validators.required],
       nitelik: ['', Validators.required],
-      koordinatBilgileri: ['', Validators.required]
+      koordinatBilgileri: ['', Validators.required],
+      adres: ['', Validators.required] // Adres kontrolünü ekleyin
     });
   }
 
   ngOnInit() {
     this.loadIller();
-    this.loadTasinmaz();
   }
 
-  ngOnChanges() {
-    this.loadTasinmaz();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['tasinmazId']) {
+      this.loadTasinmaz();
+    }
   }
 
   loadIller() {
@@ -72,7 +73,8 @@ export class UpdateComponent implements OnChanges, OnInit {
           ada: data.ada,
           parsel: data.parsel,
           nitelik: data.nitelik,
-          koordinatBilgileri: data.koordinatBilgileri
+          koordinatBilgileri: data.koordinatBilgileri,
+          adres: data.adres // Adres verisini patchValue ile ekleyin
         });
         this.onIlChange(data.mahalle.ilce.il.id);
         this.onIlceChange(data.mahalle.ilce.id);
@@ -119,5 +121,4 @@ export class UpdateComponent implements OnChanges, OnInit {
       );
     }
   }
-  
 }
