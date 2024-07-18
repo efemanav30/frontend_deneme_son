@@ -7,6 +7,7 @@ export class Tasinmaz{
     parsel: string;
     nitelik: string;
     koordinatBilgileri: string;
+    adres: string;
     mahalleId:number;
     mahalle:Mahalle;
   il: number;

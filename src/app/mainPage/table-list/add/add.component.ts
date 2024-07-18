@@ -42,6 +42,8 @@ export class AddComponent {
       parsel: ['', Validators.required],
       nitelik: ['', Validators.required],
       koordinatBilgileri: ['', Validators.required],
+      adres: ['', Validators.required],
+
     });
   }
   
@@ -123,6 +125,8 @@ export class AddComponent {
       this.newTasinmaz.parsel = this.tasinmazForm.get("parsel").value;
       this.newTasinmaz.nitelik = this.tasinmazForm.get("nitelik").value;
       this.newTasinmaz.koordinatBilgileri = this.tasinmazForm.get("koordinatBilgileri").value;
+      this.newTasinmaz.adres = this.tasinmazForm.get("adres").value;
+
   
       console.log('New Tasinmaz:', this.newTasinmaz); // Gelen veriyi kontrol edin
   

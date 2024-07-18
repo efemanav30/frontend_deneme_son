@@ -1,3 +1,5 @@
+<app-navbar></app-navbar>
+<app-map></app-map>
 <div class="tablo">
   <!-- src/app/components/table-list/table-list.component.html -->
 <div class="container mt-4">
@@ -15,6 +17,8 @@
           <th scope="col">Mahalle</th>
           <th scope="col">İlçe</th>
           <th scope="col">İl</th>
+          <th scope="col">Adres</th>
+
         </tr>
       </thead>
       <tbody>
@@ -28,6 +32,8 @@
           <td>{{ tasinmaz.mahalle.name }}</td>
           <td>{{ tasinmaz.mahalle.ilce.name }}</td>
           <td>{{ tasinmaz.mahalle.ilce.il.name }}</td>
+          <td>{{ tasinmaz.adres }}</td>
+
         </tr>
       </tbody>
     </table>
@@ -40,9 +46,10 @@
   <div class="btn-container">
     <button class="btn1" type="button" data-bs-toggle="modal" data-bs-target="#addTasinmazModal">Yeni Taşınmaz Ekle</button>
     <button class="btn2" (click)="deleteSelectedTasinmaz()">Taşınmaz Sil</button>
-    <button class="btn3" type="button" (click)="openEditModal()" data-bs-toggle="modal"  data-bs-target="#updateTasinmazModal">Taşınmaz Düzenle</button>
+    <button class="btn3" type="button" (click)="openUpdateModal()" data-bs-toggle="modal"  data-bs-target="#updateTasinmazModal">Taşınmaz Düzenle</button>
   </div>
 </div>
-<app-update></app-update>
+<app-update ></app-update>
 <app-add></app-add>
 </div>
+<!--(tasinmazUpdated)="onTasinmazUpdated()"-->

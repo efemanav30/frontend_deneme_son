@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Route } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navbar',
@@ -7,10 +8,23 @@ import { Route } from '@angular/router';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+  currentTitle: string = 'Anasayfa';
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor(private router: Router) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      const currentRoute = this.router.routerState.root.snapshot.firstChild;
+      if (currentRoute && currentRoute.data['title']) {
+        this.currentTitle = currentRoute.data['title'];
+      }
+    });
   }
 
+  ngOnInit(): void {
+    const currentRoute = this.router.routerState.root.snapshot.firstChild;
+    if (currentRoute && currentRoute.data['title']) {
+      this.currentTitle = currentRoute.data['title'];
+    }
+  }
 }

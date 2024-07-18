@@ -39,6 +39,8 @@ export class TableListComponent implements OnInit {
     });
   }
 
+  
+
   deleteSelectedTasinmaz() {
     const selectedTasinmaz = this.tasinmazlar.find(tasinmaz => tasinmaz.selected);
     if (selectedTasinmaz) {
@@ -53,7 +55,7 @@ export class TableListComponent implements OnInit {
     }
   }
 
-  openEditModal() {
+  openUpdateModal() {
     const selectedTasinmaz = this.tasinmazlar.find(tasinmaz => tasinmaz.selected);
     console.log(selectedTasinmaz);
 
@@ -72,5 +74,6 @@ export class TableListComponent implements OnInit {
       console.log('Düzenlemek için hiçbir taşınmaz seçilmedi');
     }
   }
+  
 }
 //BURADA OYNAMA YAPILINCA TÜM EKRAN BEYAZ OLUYOR

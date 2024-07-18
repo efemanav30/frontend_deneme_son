@@ -11,6 +11,7 @@ import { TasinmazService } from './tasinmaz.service';
 import { AddComponent } from './mainPage/table-list/add/add.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { UpdateComponent } from './mainPage/table-list/update/update.component';
+import { MapComponent } from './mainPage/table-list/map/map.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { UpdateComponent } from './mainPage/table-list/update/update.component';
     LoginComponent,
     AddComponent,
     UpdateComponent,
+    MapComponent,
     
    
     
