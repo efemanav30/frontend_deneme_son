@@ -13,4 +13,14 @@ export class Tasinmaz{
   il: number;
   ilce: number;
   selected: boolean;
+
+
+  constructor(mahalleId:number , ada:string, parsel:string, nitelik:string, koordinatBilgileri:string, adres:string){
+    this.mahalleId = mahalleId;
+    this.ada = ada;
+    this.parsel = parsel;
+    this.nitelik = nitelik;
+    this.koordinatBilgileri = koordinatBilgileri;
+    this.adres = adres;
+  }
 }

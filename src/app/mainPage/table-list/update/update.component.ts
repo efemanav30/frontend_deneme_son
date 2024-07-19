@@ -21,7 +21,10 @@ export class UpdateComponent implements OnChanges, OnInit {
   ilceler: Ilce[] = [];
   mahalleler: Mahalle[] = [];
   selectedTasinmaz: Tasinmaz;
-
+selectedIl: number;
+selectedIlce: number;
+selectedMahalle: number;
+deger : Tasinmaz;
   constructor(
     private fb: FormBuilder,
     private tasinmazService: TasinmazService,
@@ -29,6 +32,11 @@ export class UpdateComponent implements OnChanges, OnInit {
     private ilceService: IlceService,
     private mahalleService: MahalleService
   ) {
+    
+  }
+
+  ngOnInit() {
+    this.loadIller();
     this.updateTasinmazForm = this.fb.group({
       il: ['', Validators.required],
       ilce: ['', Validators.required],
@@ -39,16 +47,32 @@ export class UpdateComponent implements OnChanges, OnInit {
       koordinatBilgileri: ['', Validators.required],
       adres: ['', Validators.required] // Adres kontrolünü ekleyin
     });
-  }
-
-  ngOnInit() {
-    this.loadIller();
+    this.loadTasinmaz(this.tasinmazId);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['tasinmazId']) {
-      this.loadTasinmaz();
+      this.loadTasinmaz(this.tasinmazId);
+    } if (this.tasinmazId) {
+      this.tasinmazService.getTasinmazById(this.tasinmazId).subscribe(data => {
+        this.updateTasinmazForm.patchValue({
+          isim: data.name,
+          il: data.mahalle.ilce.il.id,
+          ilce: data.mahalle.ilce.id,
+          mahalle: data.mahalle.id,
+          ada: data.ada,
+          parsel: data.parsel,
+          nitelik: data.nitelik,
+          koordinatBilgileri: data.koordinatBilgileri,
+               
+        adres: data.adres
+
+        });
+
+        this.onIlChange(data.mahalle.ilce.il.id, data.mahalle.ilce.id, data.mahalle.id);
+      });
     }
+    
   }
 
   loadIller() {
@@ -62,27 +86,34 @@ export class UpdateComponent implements OnChanges, OnInit {
     );
   }
 
-  loadTasinmaz() {
-    if (this.tasinmazId) {
-      this.tasinmazService.getTasinmazById(this.tasinmazId).subscribe((data) => {
+  loadTasinmaz(id:number) {
+    if (id) {
+      console.log(id);
+      this.tasinmazService.getTasinmazById(id).subscribe((data) => {
+        console.log("a");
         this.selectedTasinmaz = data;
         this.updateTasinmazForm.patchValue({
-          il: data.mahalle.ilce.il.id,
-          ilce: data.mahalle.ilce.id,
-          mahalle: data.mahalle.id,
+          //il: data.mahalle.ilce.il.id,
+           //ilce: data.mahalle.ilce.id,
+          // mahalle: data.mahalle.id,
           ada: data.ada,
           parsel: data.parsel,
           nitelik: data.nitelik,
           koordinatBilgileri: data.koordinatBilgileri,
-          adres: data.adres // Adres verisini patchValue ile ekleyin
+          adres: data.adres
         });
+        console.log(data.mahalle.ilce.il.id);
+        this.selectedIl = data.mahalle.ilce.il.id;
+        this.selectedIlce = data.mahalle.ilce.id;
+        this.selectedMahalle = data.mahalle.id;
         this.onIlChange(data.mahalle.ilce.il.id);
-        this.onIlceChange(data.mahalle.ilce.id);
+        
+        // this.onIlceChange(data.mahalle.ilce.id);
       });
     }
   }
 
-  onIlChange(ilId: number) {
+  onIlChange(ilId: number, ilceId?: number, mahalleId?: number) {
     if (ilId > 0) {
       this.ilceService.getIlcelerByIlId(ilId).subscribe(
         (data) => {
@@ -110,15 +141,24 @@ export class UpdateComponent implements OnChanges, OnInit {
 
   onSubmit() {
     if (this.updateTasinmazForm.valid) {
-      const updatedTasinmaz = { ...this.selectedTasinmaz, ...this.updateTasinmazForm.value };
-      this.tasinmazService.updateTasinmaz(updatedTasinmaz).subscribe(
+      // const updatedTasinmaz = { ...this.selectedTasinmaz, ...this.updateTasinmazForm.value };
+      const formData =this.updateTasinmazForm.value;
+      this.deger = new Tasinmaz(parseInt(formData.mahalleId,10),formData.ada,formData.parsel,formData.nitelik,formData.koordinatBilgileri,formData.adres);
+      console.log('Güncellenen Taşınmaz:', this.deger); // Güncellenen taşınmazı konsola yazdır
+  
+      this.tasinmazService.updateTasinmaz(this.deger).subscribe(
         () => {
-          console.log('Taşınmaz başarıyla güncellendi:', updatedTasinmaz);
+          console.log('Taşınmaz başarıyla güncellendi:', this.deger);
+          // Güncelleme sonrası işlemler (örneğin, modalı kapatma veya verileri yeniden yükleme)
         },
         (error) => {
           console.error('Taşınmaz güncellenirken bir hata oluştu:', error);
         }
       );
+    } else {
+      console.log('Form geçerli değil'); // Formun geçerli olup olmadığını kontrol et
     }
   }
+  
+  
 }

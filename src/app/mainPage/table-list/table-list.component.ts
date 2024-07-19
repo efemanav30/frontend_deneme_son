@@ -50,6 +50,7 @@ export class TableListComponent implements OnInit {
   openUpdateModal() {
     const selectedTasinmaz = this.tasinmazlar.find(tasinmaz => tasinmaz.selected);
     console.log(selectedTasinmaz);
+   // console.log('seçilen taşınmaz id: ', selectedTasinmaz.id);
 
     if (selectedTasinmaz) {
       const modalRef = this.modalService.open(UpdateComponent);

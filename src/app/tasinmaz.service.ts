@@ -40,7 +40,7 @@ export class TasinmazService {
   }
 
   getMahallelerByIlceId(ilceId : number): Observable<Mahalle[]> {
-    return this.http.get<Mahalle[]>(`${this.path}mahalle/getBySehirId/${ilceId}`);
+    return this.http.get<Mahalle[]>(`${this.path}mahalle/getBySehirId${ilceId}`);
   }
   
   deleteTasinmaz(id: number): Observable<void> {
@@ -48,10 +48,10 @@ export class TasinmazService {
   }
 
   updateTasinmaz(tasinmaz: Tasinmaz): Observable<Tasinmaz> {
-    return this.http.put<Tasinmaz>(`${this.apiUrl}Tasinmaz/${tasinmaz.id}`, tasinmaz);
+    return this.http.put<Tasinmaz>(`https://localhost:44312/api/Tasinmaz/${tasinmaz.id}`, tasinmaz);
   }
 
   getTasinmazById(id: number): Observable<Tasinmaz> {
-    return this.http.get<Tasinmaz>(`${this.apiUrl}/${id}`);
+    return this.http.get<Tasinmaz>(`${this.apiUrl}Tasinmaz/${id}`);
   }
 }

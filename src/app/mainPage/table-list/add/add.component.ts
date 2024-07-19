@@ -21,7 +21,7 @@ import { Router } from "@angular/router";
 })
 export class AddComponent {
 
-  newTasinmaz: Tasinmaz = new Tasinmaz();
+  newTasinmaz: Tasinmaz;
   mahalleler: Mahalle[] = [];
   iller: Il[] = [];
   ilceler: Ilce[] = [];
