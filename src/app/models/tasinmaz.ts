@@ -15,7 +15,7 @@ export class Tasinmaz{
   selected: boolean;
 
 
-  constructor(mahalleId:number , ada:string, parsel:string, nitelik:string, koordinatBilgileri:string, adres:string){
+ constructor(mahalleId:number , ada:string, parsel:string, nitelik:string, koordinatBilgileri:string, adres:string){
     this.mahalleId = mahalleId;
     this.ada = ada;
     this.parsel = parsel;

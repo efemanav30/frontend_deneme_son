@@ -21,10 +21,8 @@ export class UpdateComponent implements OnChanges, OnInit {
   ilceler: Ilce[] = [];
   mahalleler: Mahalle[] = [];
   selectedTasinmaz: Tasinmaz;
-selectedIl: number;
-selectedIlce: number;
-selectedMahalle: number;
-deger : Tasinmaz;
+  tasinmaz :Tasinmaz;
+
   constructor(
     private fb: FormBuilder,
     private tasinmazService: TasinmazService,
@@ -32,11 +30,6 @@ deger : Tasinmaz;
     private ilceService: IlceService,
     private mahalleService: MahalleService
   ) {
-    
-  }
-
-  ngOnInit() {
-    this.loadIller();
     this.updateTasinmazForm = this.fb.group({
       il: ['', Validators.required],
       ilce: ['', Validators.required],
@@ -45,34 +38,19 @@ deger : Tasinmaz;
       parsel: ['', Validators.required],
       nitelik: ['', Validators.required],
       koordinatBilgileri: ['', Validators.required],
-      adres: ['', Validators.required] // Adres kontrolünü ekleyin
+      adres: ['', Validators.required]
     });
+  }
+
+  ngOnInit() {
+    this.loadIller();
     this.loadTasinmaz(this.tasinmazId);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['tasinmazId']) {
       this.loadTasinmaz(this.tasinmazId);
-    } if (this.tasinmazId) {
-      this.tasinmazService.getTasinmazById(this.tasinmazId).subscribe(data => {
-        this.updateTasinmazForm.patchValue({
-          isim: data.name,
-          il: data.mahalle.ilce.il.id,
-          ilce: data.mahalle.ilce.id,
-          mahalle: data.mahalle.id,
-          ada: data.ada,
-          parsel: data.parsel,
-          nitelik: data.nitelik,
-          koordinatBilgileri: data.koordinatBilgileri,
-               
-        adres: data.adres
-
-        });
-
-        this.onIlChange(data.mahalle.ilce.il.id, data.mahalle.ilce.id, data.mahalle.id);
-      });
     }
-    
   }
 
   loadIller() {
@@ -86,38 +64,41 @@ deger : Tasinmaz;
     );
   }
 
-  loadTasinmaz(id:number) {
+  loadTasinmaz(id: number) {
     if (id) {
-      console.log(id);
       this.tasinmazService.getTasinmazById(id).subscribe((data) => {
-        console.log("a");
         this.selectedTasinmaz = data;
-        this.updateTasinmazForm.patchValue({
-          //il: data.mahalle.ilce.il.id,
-           //ilce: data.mahalle.ilce.id,
-          // mahalle: data.mahalle.id,
-          ada: data.ada,
-          parsel: data.parsel,
-          nitelik: data.nitelik,
-          koordinatBilgileri: data.koordinatBilgileri,
-          adres: data.adres
-        });
-        console.log(data.mahalle.ilce.il.id);
-        this.selectedIl = data.mahalle.ilce.il.id;
-        this.selectedIlce = data.mahalle.ilce.id;
-        this.selectedMahalle = data.mahalle.id;
-        this.onIlChange(data.mahalle.ilce.il.id);
-        
-        // this.onIlceChange(data.mahalle.ilce.id);
+        console.log(data)
+        console.log("mahalleid", data.mahalle.id)
+
+        if (data && data.mahalle && data.mahalle.ilce && data.mahalle.ilce.il) {
+          this.updateTasinmazForm.patchValue({
+            il: data.mahalle.ilce.il.id,
+            ilce: data.mahalle.ilce.id,
+            mahalle: data.mahalle.id,
+            ada: data.ada,
+            parsel: data.parsel,
+            nitelik: data.nitelik,
+            koordinatBilgileri: data.koordinatBilgileri,
+            adres: data.adres
+          });
+          this.onIlChange(data.mahalle.ilce.il.id, data.mahalle.ilce.id);
+        } else {
+          console.error('Taşınmaz verisi eksik veya hatalı:', data);
+        }
       });
     }
   }
 
-  onIlChange(ilId: number, ilceId?: number, mahalleId?: number) {
+  onIlChange(ilId: number, ilceId?: number) {
     if (ilId > 0) {
       this.ilceService.getIlcelerByIlId(ilId).subscribe(
         (data) => {
           this.ilceler = data;
+          if (ilceId) {
+            this.updateTasinmazForm.patchValue({ ilce: ilceId });
+            this.onIlceChange(ilceId);
+          }
         },
         (error) => {
           console.error('İlçeler yüklenirken hata oluştu', error);
@@ -141,15 +122,21 @@ deger : Tasinmaz;
 
   onSubmit() {
     if (this.updateTasinmazForm.valid) {
-      // const updatedTasinmaz = { ...this.selectedTasinmaz, ...this.updateTasinmazForm.value };
-      const formData =this.updateTasinmazForm.value;
-      this.deger = new Tasinmaz(parseInt(formData.mahalleId,10),formData.ada,formData.parsel,formData.nitelik,formData.koordinatBilgileri,formData.adres);
-      console.log('Güncellenen Taşınmaz:', this.deger); // Güncellenen taşınmazı konsola yazdır
+      // Formdan gelen değerler ile yeni Tasinmaz nesnesi oluşturun
+      this.tasinmaz = new Tasinmaz(parseInt(
+        this.updateTasinmazForm.get("mahalle").value,10), // Mahalle ID'si
+        this.updateTasinmazForm.get("ada").value,
+        this.updateTasinmazForm.get("parsel").value,
+        this.updateTasinmazForm.get("nitelik").value,
+        this.updateTasinmazForm.get("koordinatBilgileri").value,
+        this.updateTasinmazForm.get("adres").value
+      );
   
-      this.tasinmazService.updateTasinmaz(this.deger).subscribe(
+      // Güncelleme servisine gönderin
+      this.tasinmazService.updateTasinmaz(this.tasinmazId,this.tasinmaz).subscribe(
         () => {
-          console.log('Taşınmaz başarıyla güncellendi:', this.deger);
-          // Güncelleme sonrası işlemler (örneğin, modalı kapatma veya verileri yeniden yükleme)
+          console.log('Taşınmaz başarıyla güncellendi:', this.tasinmaz);
+          location.reload();
         },
         (error) => {
           console.error('Taşınmaz güncellenirken bir hata oluştu:', error);
@@ -159,6 +146,5 @@ deger : Tasinmaz;
       console.log('Form geçerli değil'); // Formun geçerli olup olmadığını kontrol et
     }
   }
-  
   
 }

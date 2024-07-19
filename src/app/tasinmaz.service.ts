@@ -47,8 +47,8 @@ export class TasinmazService {
     return this.http.delete<void>(`${this.apiUrl}Tasinmaz/${id}`);
   }
 
-  updateTasinmaz(tasinmaz: Tasinmaz): Observable<Tasinmaz> {
-    return this.http.put<Tasinmaz>(`https://localhost:44312/api/Tasinmaz/${tasinmaz.id}`, tasinmaz);
+  updateTasinmaz(id:number,tasinmaz: Tasinmaz): Observable<Tasinmaz> {
+    return this.http.put<Tasinmaz>(`https://localhost:44312/api/Tasinmaz/${id}`, tasinmaz);
   }
 
   getTasinmazById(id: number): Observable<Tasinmaz> {

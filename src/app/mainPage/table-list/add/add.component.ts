@@ -118,21 +118,22 @@ export class AddComponent {
   add(): void {
     if (this.tasinmazForm.valid) {
       // Formdan gelen verileri newTasinmaz nesnesine atayın
-      this.newTasinmaz.il = parseInt(this.tasinmazForm.get("il").value);
-      this.newTasinmaz.ilce = parseInt(this.tasinmazForm.get("ilce").value);
-      this.newTasinmaz.mahalleId = parseInt(this.tasinmazForm.get("mahalleId").value);
-      this.newTasinmaz.ada = this.tasinmazForm.get("ada").value;
-      this.newTasinmaz.parsel = this.tasinmazForm.get("parsel").value;
-      this.newTasinmaz.nitelik = this.tasinmazForm.get("nitelik").value;
-      this.newTasinmaz.koordinatBilgileri = this.tasinmazForm.get("koordinatBilgileri").value;
-      this.newTasinmaz.adres = this.tasinmazForm.get("adres").value;
-
+      // this.newTasinmaz.il = parseInt(this.tasinmazForm.get("il").value);
+      // this.newTasinmaz.ilce = parseInt(this.tasinmazForm.get("ilce").value);
+      // this.newTasinmaz.mahalleId = parseInt(this.tasinmazForm.get("mahalleId").value);
+      // this.newTasinmaz.ada = this.tasinmazForm.get("ada").value;
+      // this.newTasinmaz.parsel = this.tasinmazForm.get("parsel").value;
+      // this.newTasinmaz.nitelik = this.tasinmazForm.get("nitelik").value;
+      // this.newTasinmaz.koordinatBilgileri = this.tasinmazForm.get("koordinatBilgileri").value;
+      // this.newTasinmaz.adres = this.tasinmazForm.get("adres").value;
+      this.newTasinmaz = new Tasinmaz(parseInt(this.tasinmazForm.get("mahalleId").value),this.tasinmazForm.get("ada").value,this.tasinmazForm.get("parsel").value,this.tasinmazForm.get("nitelik").value,this.tasinmazForm.get("koordinatBilgileri").value,this.tasinmazForm.get("adres").value);
   
       console.log('New Tasinmaz:', this.newTasinmaz); // Gelen veriyi kontrol edin
   
       // newTasinmaz nesnesini API'ye gönderin
       this.tasinmazService.addTasinmaz(this.newTasinmaz).subscribe(response => {
         console.log('Taşınmaz başarıyla eklendi');
+        location.reload();
         this.router.navigate(['/table-list']); // Başarılı ekleme sonrası yapılacak işlemler
       }, error => {
         console.error('Taşınmaz eklenirken bir hata oluştu', error);
