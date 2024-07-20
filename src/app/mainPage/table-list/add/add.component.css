@@ -24,3 +24,16 @@ form select, form input {
 form button {
     padding: 10px 20px; /* Butona padding ekle */
 }
+.popup{
+    width: 80px;
+    
+}
+/* add.component.css */
+.map-container {
+    width: 100%;
+    height: 400px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+  }
+  
