@@ -129,8 +129,8 @@ export class AddComponent {
           }),
         ],
         view: new View({
-          center: fromLonLat([29.15, 36.6]), // Başlangıç merkezi
-          zoom: 14 // Başlangıç zoom seviyesi
+          center: fromLonLat([35, 39]), // Başlangıç merkezi
+          zoom: 5 // Başlangıç zoom seviyesi
         })
       });
 

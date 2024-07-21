@@ -11,6 +11,7 @@ import { UpdateComponent } from './update/update.component';
 })
 export class TableListComponent implements OnInit {
   tasinmazlar: Tasinmaz[] = [];
+  coordinates: { lon: number; lat: number; }[];
 
   constructor(private tasinmazService: TasinmazService,
               private modalService: NgbModal) { }
@@ -22,8 +23,11 @@ export class TableListComponent implements OnInit {
   loadTasinmazlar() {
     this.tasinmazService.getTasinmazlar().subscribe(data => {
       this.tasinmazlar = data;
+      this.extractCoordinates();
+
     });
   }
+  
 
   selectRow(selectedTasinmaz: Tasinmaz) {
     this.tasinmazlar.forEach(tasinmaz => {
@@ -67,4 +71,13 @@ export class TableListComponent implements OnInit {
       console.log('Düzenlemek için hiçbir taşınmaz seçilmedi');
     }
   }
+  extractCoordinates(): void {
+    this.coordinates = this.tasinmazlar.map(tasinmaz => {
+      const coords = tasinmaz.koordinatBilgileri.split(',').map(coord => parseFloat(coord.trim()));
+      console.log("Extracted coordinates:", coords);
+      return { lon: coords[1], lat: coords[0] }; // Koordinatları doğru sırayla ayırıyoruz
+    });
+    console.log("Coordinates to be sent to the map:", this.coordinates);
+  }
+  
 }

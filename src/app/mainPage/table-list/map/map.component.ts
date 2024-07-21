@@ -1,10 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import * as ol from 'ol';
-
 import OSM from 'ol/source/OSM';
-import 'ol/ol.css';
 import { fromLonLat } from 'ol/proj';
 import { Coordinate } from 'ol/coordinate';
 import ScaleLine from 'ol/control/ScaleLine';
@@ -13,35 +10,17 @@ import { Vector as VectorSource } from 'ol/source';
 import { Point } from 'ol/geom';
 import { Feature } from 'ol';
 import { Style, Fill, Stroke, Circle as CircleStyle } from 'ol/style';
-import { Tasinmaz } from 'src/app/models/tasinmaz';
-import TileImage from 'ol/source/TileImage';
-import { environment } from 'src/environments/environment';
-declare var google: any;
-
-
-
-
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, OnChanges {
+  @Input() coordinates: { lon: number, lat: number }[] = []; // Ana sayfadan koordinatları al
   map: Map;
-  osmLayer: TileLayer<any>;
-  osmLayerOpacity: number = 1;
-  @Output() coordinateClicked = new EventEmitter<Coordinate>();
   vectorSource: VectorSource;
   vectorLayer: VectorLayer<any>;
-  googleLayer: TileLayer<any>; 
-  showGoogleMap: boolean = false; 
-  mousemove: Coordinate; 
-  mousemoves: string;
-  mouseX: number;
-  showOpenStreetMap: boolean = false;
-  mouseY: number;
-  isMouseOver: boolean;
 
   constructor() { }
 
@@ -52,25 +31,25 @@ export class MapComponent implements OnInit {
       style: new Style({
         image: new CircleStyle({
           radius: 5,
-          fill: new Fill({color: 'red'}),
+          fill: new Fill({ color: 'red' }),
           stroke: new Stroke({
-            color: [255,0,0], width: 2
+            color: [255, 0, 0], width: 2
           })
         })
       })
     });
-   
-    this.osmLayer = new TileLayer({
-      source: new OSM(),
-      opacity: this.osmLayerOpacity
-    });
 
     this.map = new Map({
       target: 'map',
-      layers: [this.osmLayer, this.vectorLayer],
+      layers: [
+        new TileLayer({
+          source: new OSM(),
+        }),
+        this.vectorLayer
+      ],
       view: new View({
-        center: fromLonLat([35, 39]),
-        zoom: 6
+        center: fromLonLat([35, 39]), // Türkiye'nin merkezi koordinatları
+        zoom: 6 // Türkiye'yi kapsayacak şekilde yakınlaştırma seviyesi
       })
     });
 
@@ -81,71 +60,32 @@ export class MapComponent implements OnInit {
       text: true,
     });
     this.map.addControl(scale);
-    scale.setTarget('scale-bar');
+    scale.setTarget('scale-line');
 
+    console.log("Coordinates to be added to the map:", this.coordinates);
+    this.addSavedCoordinates();
   }
 
-  
-
-  
-
-/*
-  toggleGoogleMap() {
-    if (!this.showGoogleMap) {
-      if (!this.googleLayer) {
-        this.googleLayer = new TileLayer({
-          source: new ol.source.TileImage({
-            url: `https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&key=${environment.googleMapsApiKey}`,
-            attributions: '© Google'
-          })
-        });
-      }
-      this.map.addLayer(this.googleLayer);
-    } else {
-      this.map.removeLayer(this.googleLayer);
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.coordinates && !changes.coordinates.firstChange) {
+      console.log("Coordinates input changed:", this.coordinates);
+      this.addSavedCoordinates();
     }
   }
-  
-*/
 
- 
-
-  coordinatedClicked() {
-    this.map.on('click', (evt) => {
-      const coordinate = evt.coordinate; 
-        this.vectorSource.clear();
-        this.addPoint(coordinate);
-        this.coordinateClicked.emit(coordinate); 
-        console.log(coordinate); 
-    });
+  addSavedCoordinates(): void {
+    console.log("Adding coordinates to the map:", this.coordinates);
+    if (this.vectorSource) {
+      this.vectorSource.clear(); // Önceki noktaları temizle
+      // @Input ile alınan koordinatları ekleyin
+      this.coordinates.forEach(coord => {
+        const transformedCoord = fromLonLat([coord.lon, coord.lat]);
+        console.log("Adding point:", transformedCoord);
+        const feature = new Feature({
+          geometry: new Point(transformedCoord),
+        });
+        this.vectorSource.addFeature(feature);
+      });
+    }
   }
-  
-  addPoint(coordinate: Coordinate) {
-    const point = new Point(coordinate);
-    const feature = new Feature(point); 
-    this.vectorSource.addFeature(feature);
-  }
-  
-
-
-  setTasinmazCoordinates(tasinmazlar: Tasinmaz[]) {
-    tasinmazlar.forEach(tasinmaz => {
-      const coordinate: Coordinate = [tasinmaz.koordinatBilgileri];
-      this.addPoint(coordinate);
-    });
-  }
-  popupPage(){
-    this.map.on('click', function(evt){
-      var feature1 = this.map.ForEachFeatureAtPixel(evt.pixel,
-        function(feature1){
-          return feature1;
-
-        })
-        console.log(feature1);
-        
-
-    })
-  }
-
-  
 }
