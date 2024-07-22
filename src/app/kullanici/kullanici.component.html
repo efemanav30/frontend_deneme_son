@@ -1,6 +1,44 @@
 <app-navbar></app-navbar>
 
+<div class="tablo">
+  <div class="container mt-4">
+    <h2>Kullanıcı Listesi</h2>
+    <div *ngIf="kullanicilar.length > 0; else noData">
+      <table class="table table-striped table-info">
+        <thead>
+          <tr>
+            <th scope="col">></th>
+            <th scope="col">Ad</th>
+            <th scope="col">Soyad</th>
+            <th scope="col">Email</th>
+            <th scope="col">Telefon</th>
+            <th scope="col">Adres</th>
+            <th scope="col">Rol</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let kullanici of kullanicilar">
+            <td><input type="checkbox" [(ngModel)]="kullanici.selected" (change)="selectRow(kullanici)"></td>
+            <td>{{ kullanici.name }}</td>
+            <td>{{ kullanici.surname }}</td>
+            <td>{{ kullanici.email }}</td>
+            <td>{{ kullanici.phone }}</td>
+            <td>{{ kullanici.adress }}</td>
+            <td>{{ kullanici.role }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <ng-template #noData>
+      <p>Veri bulunamadı.</p>
+    </ng-template>
+  
+    <div class="btn-container">
+      <button class="btn1" type="button" (click)="openAddModal()">Yeni Kullanıcı Ekle</button>
+      <button class="btn2" (click)="deleteSelectedKullanicilar()">Kullanıcı Sil</button>
+      <button class="btn3" type="button" (click)="openUpdateModal()">Kullanıcı Düzenle</button>
+    </div>
+  </div>
+</div>
 
-<p>
-  kullanici works!
-</p>

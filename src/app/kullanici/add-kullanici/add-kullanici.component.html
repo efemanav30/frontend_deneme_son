@@ -1,0 +1,34 @@
+<div class="modal-body">
+  <form (ngSubmit)="addKullanici()">
+    <div class="form-group">
+      <label for="name">Ad</label>
+      <input type="text" id="name" [(ngModel)]="kullanici.name" name="name" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="surname">Soyad</label>
+      <input type="text" id="surname" [(ngModel)]="kullanici.surname" name="surname" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" [(ngModel)]="kullanici.email" name="email" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="password">Şifre</label>
+      <input type="password" id="password" [(ngModel)]="kullanici.password" name="password" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="phone">Telefon</label>
+      <input type="text" id="phone" [(ngModel)]="kullanici.phone" name="phone" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="adress">Adres</label>
+      <input type="text" id="adress" [(ngModel)]="kullanici.adress" name="adress" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="role">Rol</label>
+      <input type="text" id="role" [(ngModel)]="kullanici.role" name="role" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Ekle</button>
+  </form>
+</div>
+  

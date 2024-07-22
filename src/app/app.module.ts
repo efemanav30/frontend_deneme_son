@@ -14,7 +14,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { UpdateComponent } from './mainPage/table-list/update/update.component';
 import { MapComponent } from './mainPage/table-list/map/map.component';
 import { KullaniciComponent } from './kullanici/kullanici.component';
-
+import { AddKullaniciComponent } from './kullanici/add-kullanici/add-kullanici.component';
+import { UpdateKullaniciComponent } from './kullanici/update-kullanici/update-kullanici.component';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -27,6 +29,8 @@ import { KullaniciComponent } from './kullanici/kullanici.component';
     UpdateComponent,
     MapComponent,
     KullaniciComponent,
+    AddKullaniciComponent,
+    UpdateKullaniciComponent,
     
    
     
@@ -40,9 +44,9 @@ import { KullaniciComponent } from './kullanici/kullanici.component';
     
     
   ],
-  providers: [TasinmazService],
+  providers: [TasinmazService,NgbActiveModal],
   bootstrap: [AppComponent],
-  entryComponents: [UpdateComponent] // UpdateComponent'i entryComponents'e ekleyin
+  entryComponents: [AddKullaniciComponent, UpdateKullaniciComponent] // Add this line
 
 })
 export class AppModule { }

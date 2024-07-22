@@ -1,0 +1,34 @@
+<div class="modal-header">
+  <h4 class="modal-title">Kullanıcı Düzenle</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form>
+    <div class="form-group">
+      <label for="name">Ad</label>
+      <input type="text" class="form-control" id="name" [(ngModel)]="kullanici.name" name="name" required>
+    </div>
+    <div class="form-group">
+      <label for="surname">Soyad</label>
+      <input type="text" class="form-control" id="surname" [(ngModel)]="kullanici.surname" name="surname" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" class="form-control" id="email" [(ngModel)]="kullanici.email" name="email" required>
+    </div>
+    <div class="form-group">
+      <label for="phone">Telefon</label>
+      <input type="text" class="form-control" id="phone" [(ngModel)]="kullanici.phone" name="phone" required>
+    </div>
+    <div class="form-group">
+      <label for="role">Rol</label>
+      <input type="text" class="form-control" id="role" [(ngModel)]="kullanici.role" name="role" required>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Kapat</button>
+  <button type="button" class="btn btn-primary" (click)="updateKullanici()">Güncelle</button>
+</div>
