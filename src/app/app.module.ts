@@ -13,6 +13,7 @@ import { AddComponent } from './mainPage/table-list/add/add.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { UpdateComponent } from './mainPage/table-list/update/update.component';
 import { MapComponent } from './mainPage/table-list/map/map.component';
+import { KullaniciComponent } from './kullanici/kullanici.component';
 
 
 
@@ -25,6 +26,7 @@ import { MapComponent } from './mainPage/table-list/map/map.component';
     AddComponent,
     UpdateComponent,
     MapComponent,
+    KullaniciComponent,
     
    
     

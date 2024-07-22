@@ -40,13 +40,19 @@ export class TableListComponent implements OnInit {
   deleteSelectedTasinmaz() {
     const selectedTasinmaz = this.tasinmazlar.find(tasinmaz => tasinmaz.selected);
     if (selectedTasinmaz) {
-      this.tasinmazService.deleteTasinmaz(selectedTasinmaz.id).subscribe(() => {
-        console.log('Taşınmaz başarıyla silindi:', selectedTasinmaz);
-        this.loadTasinmazlar();
-      }, error => {
-        console.error('Taşınmaz silinirken bir hata oluştu:', error);
-      });
+      const confirmation = confirm('Silmek istediğinize emin misiniz?');
+      if (confirmation) {
+        this.tasinmazService.deleteTasinmaz(selectedTasinmaz.id).subscribe(() => {
+          console.log('Taşınmaz başarıyla silindi:', selectedTasinmaz);
+          alert('Taşınmaz başarıyla silindi.');
+          this.loadTasinmazlar();
+        }, error => {
+          console.error('Taşınmaz silinirken bir hata oluştu:', error);
+        });
+      }
     } else {
+      alert('Silmek için hiçbir taşınmaz seçilmedi.');
+
       console.log('Silmek için hiçbir taşınmaz seçilmedi');
     }
   }
@@ -68,6 +74,7 @@ export class TableListComponent implements OnInit {
         console.log('Modal dismissed: ', reason);
       });
     } else {
+      alert('Düzenlemek için hiçbir taşınmaz seçilmedi.');
       console.log('Düzenlemek için hiçbir taşınmaz seçilmedi');
     }
   }

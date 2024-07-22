@@ -1,42 +1,26 @@
-<!--  
-<body>
-  <div class="login-container">
-    <div class="left-section">
-      <img src="assets/img/tarla2.jpg" alt="Background Image">
-    </div>
-    <div class="right-section">
-      <h2>Taşınmaz App</h2>
-      <form>
-        <label for="email">e-mail</label>
-        <input type="email" id="email" name="email">
-        
-        <label for="password">şifre</label>
-        <input type="password" id="password" name="password">
-        
-        <a href="#" class="forgot-password">Şifremi unuttum</a>
-        
-        <button type="submit" class="login-button">Giriş Yap</button>
-      </form>
-    </div>
-  </div>
-</body>
--->
-
 <app-navbar></app-navbar>
-<body>
+
+<div class="video-background">
+  <video autoplay muted loop id="backgroundVideo">
+    <source src="../../../assets/odak.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+</div>
+
+<div class="giris">
   <div class="container" id="container">
     <div class="form-container sign-in">
       <form>
         <h1>TaşınmazApp</h1>
         <br><br>
         <h2>Giriş Yap</h2>
-
+  
         <input type="email" placeholder="Email">
         <input type="password" placeholder="Şifre">
         <button type="button" id="login">Giriş Yap</button>
       </form>
     </div>
-
+  
     <div class="form-container sign-up">
       <form>
         <h1>Odak GIS Hakkında</h1>
@@ -49,7 +33,7 @@
         <a href="https://odakgis.com.tr">OdakGIS sayfasına gitmek için</a>
       </form>
     </div>
-
+  
     <div class="toggle-container">
       <div class="toggle">
         <div class="toggle-panel toggle-left">
@@ -65,4 +49,4 @@
       </div>
     </div>
   </div>
-</body>
+</div>

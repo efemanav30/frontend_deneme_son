@@ -175,10 +175,12 @@ export class AddComponent {
       console.log('New Tasinmaz:', this.newTasinmaz);
   
       this.tasinmazService.addTasinmaz(this.newTasinmaz).subscribe(response => {
+        alert('Taşınmaz başarıyla eklendi.');
         console.log('Taşınmaz başarıyla eklendi');
         location.reload();
         this.router.navigate(['/table-list']);
       }, error => {
+        alert('Taşınmaz eklenirken bir hata oluştu.');
         console.error('Taşınmaz eklenirken bir hata oluştu', error);
       });
     }

@@ -135,10 +135,13 @@ export class UpdateComponent implements OnChanges, OnInit {
       // Güncelleme servisine gönderin
       this.tasinmazService.updateTasinmaz(this.tasinmazId,this.tasinmaz).subscribe(
         () => {
+          alert('Taşınmaz başarıyla güncellendi.');
           console.log('Taşınmaz başarıyla güncellendi:', this.tasinmaz);
           location.reload();
         },
         (error) => {
+          alert('Taşınmaz güncellenirken bir hata oluştu.');
+
           console.error('Taşınmaz güncellenirken bir hata oluştu:', error);
         }
       );
