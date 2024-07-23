@@ -3,6 +3,7 @@ import { Tasinmaz } from 'src/app/models/tasinmaz';
 import { TasinmazService } from 'src/app/tasinmaz.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UpdateComponent } from './update/update.component';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-table-list',
@@ -85,6 +86,11 @@ export class TableListComponent implements OnInit {
       return { lon: coords[1], lat: coords[0] }; // Koordinatları doğru sırayla ayırıyoruz
     });
     console.log("Coordinates to be sent to the map:", this.coordinates);
+  }
+  exportToExcel(): void {
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.tasinmazlar);
+    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    XLSX.writeFile(workbook, 'tasinmazlar.xlsx');
   }
   
 }

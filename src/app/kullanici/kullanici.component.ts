@@ -4,6 +4,7 @@ import { KullaniciService } from '../mainPage/services/kullanici.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UpdateKullaniciComponent } from './update-kullanici/update-kullanici.component';
 import { AddKullaniciComponent } from './add-kullanici/add-kullanici.component';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-kullanici',
@@ -61,5 +62,13 @@ export class KullaniciComponent implements OnInit {
         kullanici.selected = false;
       }
     });
+  }
+
+  exportSelectedToExcel(): void {
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.kullanicilar);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Users');
+
+    XLSX.writeFile(wb, 'users_list.xlsx');
   }
 }

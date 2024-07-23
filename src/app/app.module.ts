@@ -17,6 +17,7 @@ import { KullaniciComponent } from './kullanici/kullanici.component';
 import { AddKullaniciComponent } from './kullanici/add-kullanici/add-kullanici.component';
 import { UpdateKullaniciComponent } from './kullanici/update-kullanici/update-kullanici.component';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { LogComponent } from './log/log.component';
 
 
 @NgModule({
@@ -31,6 +32,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
     KullaniciComponent,
     AddKullaniciComponent,
     UpdateKullaniciComponent,
+    LogComponent,
     
    
     

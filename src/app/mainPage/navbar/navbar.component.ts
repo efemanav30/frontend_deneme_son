@@ -8,7 +8,7 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  currentTitle: string = 'Anasayfa';
+  currentTitle: string = 'Mevcut Taşınmaz Listesi';
 
   constructor(private router: Router) {
     this.router.events.pipe(

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { User } from 'src/app/models/kullanici';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { KullaniciService } from 'src/app/mainPage/services/kullanici.service';
 
 @Component({
@@ -7,30 +7,40 @@ import { KullaniciService } from 'src/app/mainPage/services/kullanici.service';
   templateUrl: './add-kullanici.component.html',
   styleUrls: ['./add-kullanici.component.css']
 })
-export class AddKullaniciComponent {
-  kullanici: User = {
-    id: 0,
-    name: '',
-    surname: '',
-    email: '',
-    password: '',
-    phone: '',
-    adress: '',
-    role: '' // Role olarak kalacak
-  };
+export class AddKullaniciComponent implements OnInit {
+  kullaniciForm: FormGroup;
 
-  constructor(private kullaniciService: KullaniciService) { }
+  constructor(
+    private fb: FormBuilder,
+    private kullaniciService: KullaniciService
+  ) { }
+
+  ngOnInit(): void {
+    this.kullaniciForm = this.fb.group({
+      name: ['', Validators.required],
+      surname: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+      phone: ['', Validators.required],
+      adress: ['', Validators.required],
+      role: ['', Validators.required]
+    });
+  }
 
   addKullanici(): void {
-    this.kullaniciService.add(this.kullanici).subscribe(
-      response => {
-        console.log('Kullanıcı başarıyla eklendi:', response);
-        alert('Kullanıcı başarıyla eklendi.');
-      },
-      error => {
-        console.error('Kullanıcı eklenemedi:', error);
-        alert('Kullanıcı eklenemedi. Lütfen tekrar deneyin.');
-      }
-    );
+    if (this.kullaniciForm.valid) {
+      this.kullaniciService.add(this.kullaniciForm.value).subscribe(
+        response => {
+          console.log('Kullanıcı başarıyla eklendi:', response);
+          alert('Kullanıcı başarıyla eklendi.');
+        },
+        error => {
+          console.error('Kullanıcı eklenemedi:', error);
+          alert('Kullanıcı eklenemedi. Lütfen tekrar deneyin.');
+        }
+      );
+    } else {
+      alert('Lütfen formu eksiksiz doldurun.');
+    }
   }
 }

@@ -6,12 +6,14 @@ import { NavbarComponent } from './mainPage/navbar/navbar.component';
 import { AddComponent } from './mainPage/table-list/add/add.component';
 import { MapComponent } from './mainPage/table-list/map/map.component';
 import { KullaniciComponent } from './kullanici/kullanici.component';
+import { LogComponent } from './log/log.component';
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'table-list', component: TableListComponent },
   { path: 'home', component: MapComponent, data: { title: 'Anasayfa' } },
   { path: 'table-list', component: AddComponent },
   { path: 'table-list', component: TableListComponent, data: { title: 'Mevcut Taşınmaz Listesi' }},
+  { path: 'log', component: LogComponent, data: { title: ' Log İşlemleri' } },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'kullanici', component: KullaniciComponent, data: { title: ' Kullanıcı İşlemleri' } }
   
