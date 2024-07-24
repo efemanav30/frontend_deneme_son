@@ -1,14 +1,11 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TasinmazService } from 'src/app/tasinmaz.service';
+import { Tasinmaz } from 'src/app/models/tasinmaz';
 import { IlService } from '../../services/il.service';
 import { IlceService } from '../../services/ilce.service';
-import { TasinmazService } from 'src/app/tasinmaz.service';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { Tasinmaz } from 'src/app/models/tasinmaz';
-import { Il } from 'src/app/models/il';
-import { Ilce } from 'src/app/models/ilce';
-import { Mahalle } from 'src/app/models/mahalle';
 import { MahalleService } from '../../services/mahalle.service';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 import { Map, View } from 'ol';
 import Tile from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
@@ -21,13 +18,17 @@ import { Style, Fill, Stroke, Circle as CircleStyle } from 'ol/style';
 import { Coordinate } from 'ol/coordinate';
 import { AuthService } from '../../services/auth.service';
 
+import { Il } from 'src/app/models/il';
+import { Ilce } from 'src/app/models/ilce';
+import { Mahalle } from 'src/app/models/mahalle';
+
 @Component({
   selector: 'app-add',
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.css'],
   providers: [TasinmazService],
 })
-export class AddComponent {
+export class AddComponent implements OnInit {
   showMap = false;
   selectedCoordinate: { lon: number, lat: number } | null = null;
   @ViewChild('mapContainer') mapContainer: ElementRef;
@@ -43,13 +44,20 @@ export class AddComponent {
   map: any;
   vectorSource: any;
 
-  constructor(private ilService: IlService, private ilceService: IlceService, private tasinmazService: TasinmazService, private formBuilder: FormBuilder, private mahalleService: MahalleService, private router: Router, private authService:AuthService) {
+  constructor(
+    private ilService: IlService,
+    private ilceService: IlceService,
+    private tasinmazService: TasinmazService,
+    private formBuilder: FormBuilder,
+    private mahalleService: MahalleService,
+    private router: Router,
+    private authService: AuthService // AuthService'i ekleyin
+  ) {
     this.createTasinmazForm();
   }
 
   ngOnInit() {
     this.loadIller();
-    this.createTasinmazForm();
   }
 
   createTasinmazForm() {
@@ -63,9 +71,6 @@ export class AddComponent {
       koordinatBilgileri: ['', Validators.required],
       adres: ['', Validators.required],
     });
-  
-    // Formun doğru şekilde oluşturulduğunu ve değerlerin boş olmadığını kontrol edin
-    console.log(this.tasinmazForm.controls);
   }
 
   loadIller() {
@@ -167,27 +172,21 @@ export class AddComponent {
   }
 
   add(): void {
-    console.log("a");
-
     if (this.tasinmazForm.valid) {
-      console.log("b");
-     /* this.newTasinmaz = new Tasinmaz(
-        parseInt(
-        this.tasinmazForm.get("id").value),
-        this.tasinmazForm.get("name").value,
-        this.tasinmazForm.get("mahalleId").value,
-        this.tasinmazForm.get("ada").value,
-        this.tasinmazForm.get("parsel").value,
-        this.tasinmazForm.get("nitelik").value,
-        this.tasinmazForm.get("koordinatBilgileri").value,
-        this.tasinmazForm.get("adres").value*/
       const a = this.tasinmazForm.value;
-      //const id = this.authService.getCurrentUserId();
-      const id = 17
-      this.newTasinmaz = new Tasinmaz(parseInt(a.mahalleId,10),a.ada,a.parsel,a.nitelik,a.koordinatBilgileri,a.adres,id);
-      console.log(this.newTasinmaz);
+      const id = this.authService.getCurrentUserId(); // userId'yi authService'den alıyoruz
+      this.newTasinmaz = new Tasinmaz(
+        parseInt(a.mahalleId, 10),
+        a.ada,
+        a.parsel,
+        a.nitelik,
+        a.koordinatBilgileri,
+        a.adres,
+        id
+      );
+
       console.log('New Tasinmaz:', this.newTasinmaz);
-  
+
       this.tasinmazService.addTasinmaz(this.newTasinmaz).subscribe(response => {
         alert('Taşınmaz başarıyla eklendi.');
         console.log('Taşınmaz başarıyla eklendi');

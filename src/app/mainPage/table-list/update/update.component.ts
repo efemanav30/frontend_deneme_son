@@ -120,7 +120,7 @@ export class UpdateComponent implements OnChanges, OnInit {
     }
   }
 
-  onSubmit() {
+  /*onSubmit() {
     if (this.updateTasinmazForm.valid) {
       // Formdan gelen değerler ile yeni Tasinmaz nesnesi oluşturun
       this.tasinmaz = new Tasinmaz(parseInt(
@@ -151,5 +151,37 @@ export class UpdateComponent implements OnChanges, OnInit {
       console.log('Form geçerli değil'); // Formun geçerli olup olmadığını kontrol et
     }
   }
+  */
+  onSubmit() {
+    if (this.updateTasinmazForm.valid) {
+      const formValues = this.updateTasinmazForm.value;
+      const id = 17; // Kullanıcı ID'si, eğer gerekiyorsa buradan dinamik olarak alınabilir
+  
+      this.tasinmaz = new Tasinmaz(
+        parseInt(formValues.mahalle, 10), // Mahalle ID'si
+        formValues.ada,
+        formValues.parsel,
+        formValues.nitelik,
+        formValues.koordinatBilgileri,
+        formValues.adres,
+        id
+      );
+  
+      this.tasinmazService.updateTasinmaz(this.tasinmazId, this.tasinmaz).subscribe(
+        () => {
+          alert('Taşınmaz başarıyla güncellendi.');
+          console.log('Taşınmaz başarıyla güncellendi:', this.tasinmaz);
+          location.reload();
+        },
+        (error) => {
+          alert('Taşınmaz güncellenirken bir hata oluştu.');
+          console.error('Taşınmaz güncellenirken bir hata oluştu:', error);
+        }
+      );
+    } else {
+      console.log('Form geçerli değil'); // Formun geçerli olup olmadığını kontrol et
+    }
+  }
+  
   
 }

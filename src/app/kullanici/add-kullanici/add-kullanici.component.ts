@@ -22,7 +22,7 @@ export class AddKullaniciComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       phone: ['', Validators.required],
-      adress: ['', Validators.required],
+      adress: ['', Validators.required], // 'adress' burada 'address' değil
       role: ['', Validators.required]
     });
   }
@@ -33,6 +33,7 @@ export class AddKullaniciComponent implements OnInit {
         response => {
           console.log('Kullanıcı başarıyla eklendi:', response);
           alert('Kullanıcı başarıyla eklendi.');
+          window.location.reload();
         },
         error => {
           console.error('Kullanıcı eklenemedi:', error);
