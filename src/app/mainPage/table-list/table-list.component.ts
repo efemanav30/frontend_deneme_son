@@ -22,13 +22,19 @@ export class TableListComponent implements OnInit {
   }
 
   loadTasinmazlar() {
-    this.tasinmazService.getTasinmazlar().subscribe(data => {
-      this.tasinmazlar = data;
-      this.extractCoordinates();
-
-    });
+    this.tasinmazService.getTasinmazlar().subscribe(
+      data => {
+        this.tasinmazlar = data;
+        console.log('Loaded Tasinmazlar:', this.tasinmazlar);
+        if (this.tasinmazlar) {
+          this.extractCoordinates();
+        }
+      },
+      error => {
+        console.error('Error loading Tasinmazlar:', error);
+      }
+    );
   }
-  
 
   selectRow(selectedTasinmaz: Tasinmaz) {
     this.tasinmazlar.forEach(tasinmaz => {
@@ -53,7 +59,6 @@ export class TableListComponent implements OnInit {
       }
     } else {
       alert('Silmek için hiçbir taşınmaz seçilmedi.');
-
       console.log('Silmek için hiçbir taşınmaz seçilmedi');
     }
   }
@@ -62,7 +67,6 @@ export class TableListComponent implements OnInit {
     const selectedTasinmaz = this.tasinmazlar.find(tasinmaz => tasinmaz.selected);
     console.log(selectedTasinmaz);
     console.log('seçilen taşınmaz id: ', selectedTasinmaz.id);
-    
 
     if (selectedTasinmaz) {
       const modalRef = this.modalService.open(UpdateComponent);
@@ -80,7 +84,11 @@ export class TableListComponent implements OnInit {
       console.log('Düzenlemek için hiçbir taşınmaz seçilmedi');
     }
   }
+
   extractCoordinates(): void {
+    if (!this.tasinmazlar || this.tasinmazlar.length === 0) {
+      return;
+    }
     this.coordinates = this.tasinmazlar.map(tasinmaz => {
       const coords = tasinmaz.koordinatBilgileri.split(',').map(coord => parseFloat(coord.trim()));
       console.log("Extracted coordinates:", coords);
@@ -88,10 +96,10 @@ export class TableListComponent implements OnInit {
     });
     console.log("Coordinates to be sent to the map:", this.coordinates);
   }
+
   exportToExcel(): void {
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.tasinmazlar);
     const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
     XLSX.writeFile(workbook, 'tasinmazlar.xlsx');
   }
-  
 }

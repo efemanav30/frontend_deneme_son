@@ -29,4 +29,6 @@ export class KullaniciService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.put<User>(`${this.userApiUrl}/${id}`, user, { headers });
   }
+
+  
 }

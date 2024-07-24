@@ -14,6 +14,7 @@ export class Tasinmaz{
   ilce: number;
   selected: boolean;
    userId:number;
+   
 
 
  constructor(mahalleId:number , ada:string, parsel:string, nitelik:string, koordinatBilgileri:string, adres:string, userId:number){
