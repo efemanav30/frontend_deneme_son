@@ -18,7 +18,8 @@ import { AddKullaniciComponent } from './kullanici/add-kullanici/add-kullanici.c
 import { UpdateKullaniciComponent } from './kullanici/update-kullanici/update-kullanici.component';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LogComponent } from './log/log.component';
-
+import { JwtModule } from '@auth0/angular-jwt';
+import { AuthService } from './mainPage/services/auth.service';
 
 @NgModule({
   declarations: [
@@ -41,12 +42,14 @@ import { LogComponent } from './log/log.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule, ReactiveFormsModule,
-    NgbModule
+    FormsModule,
+    ReactiveFormsModule,
+    NgbModule,
+    JwtModule
     
     
   ],
-  providers: [TasinmazService,NgbActiveModal],
+  providers: [TasinmazService,NgbActiveModal,AuthService],
   bootstrap: [AppComponent],
   entryComponents: [AddKullaniciComponent, UpdateKullaniciComponent] // Add this line
 

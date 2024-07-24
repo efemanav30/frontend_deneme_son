@@ -10,14 +10,16 @@
 <div class="giris">
   <div class="container" id="container">
     <div class="form-container sign-in">
-      <form>
+      <form  #loginForm="ngForm" (ngSubmit)="login()">
         <h1>TaşınmazApp</h1>
         <br><br>
         <h2>Giriş Yap</h2>
-  
-        <input type="email" placeholder="Email">
-        <input type="password" placeholder="Şifre">
-        <button type="button" id="login">Giriş Yap</button>
+        
+        <input  name="email"  [(ngModel)]="loginUser.email" required type="text" placeholder="Email">
+        <input name="password"  [(ngModel)]="loginUser.password" required type="password"  placeholder="Şifre">
+        <button type="submit" [disabled]="!loginForm.valid" id="login">Giriş Yap</button>
+       
+
       </form>
     </div>
   

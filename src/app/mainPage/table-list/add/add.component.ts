@@ -165,6 +165,9 @@ export class AddComponent {
     if (this.tasinmazForm.valid) {
       this.newTasinmaz = new Tasinmaz(
         parseInt(this.tasinmazForm.get("mahalleId").value),
+        this.tasinmazForm.get("id").value,
+        this.tasinmazForm.get("name").value,
+
         this.tasinmazForm.get("ada").value,
         this.tasinmazForm.get("parsel").value,
         this.tasinmazForm.get("nitelik").value,
