@@ -51,7 +51,7 @@ import { AuthService } from './mainPage/services/auth.service';
   ],
   providers: [TasinmazService,NgbActiveModal,AuthService],
   bootstrap: [AppComponent],
-  entryComponents: [AddKullaniciComponent, UpdateKullaniciComponent] // Add this line
+  entryComponents: [AddKullaniciComponent, UpdateKullaniciComponent,UpdateComponent] // Add this line
 
 })
 export class AppModule { }

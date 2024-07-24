@@ -81,7 +81,7 @@ saveToken(token: string) {
     return localStorage.getItem(this.TOKEN_KEY);
   }
   getCurrentUserId(){
-    return this.jwtHelper.decodeToken(this.token).nameid
+    return this.jwtHelper.decodeToken(localStorage.getItem(this.token)).nameid
   }
 
   

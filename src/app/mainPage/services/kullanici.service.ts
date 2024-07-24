@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/models/kullanici';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -28,4 +29,6 @@ export class KullaniciService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.put<User>(`${this.apiUrl}/${id}`, user, { headers });
   }
+
+ 
 }

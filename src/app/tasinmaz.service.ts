@@ -25,8 +25,8 @@ export class TasinmazService {
   }
   
   
-  addTasinmaz(tasinmaz): Observable<Tasinmaz[]> {
-    return this.http.post<Tasinmaz[]>(`https://localhost:44312/api/Tasinmaz`, tasinmaz);
+  addTasinmaz(tasinmaz:Tasinmaz){
+    return this.http.post(`https://localhost:44312/api/Tasinmaz`, tasinmaz);
     //return this.http.post<Tasinmaz>("https://localhost:44364/api/tasinmaz/add/", newTasinmaz);
   }
 

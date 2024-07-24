@@ -19,6 +19,7 @@ import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { Style, Fill, Stroke, Circle as CircleStyle } from 'ol/style';
 import { Coordinate } from 'ol/coordinate';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-add',
@@ -42,12 +43,13 @@ export class AddComponent {
   map: any;
   vectorSource: any;
 
-  constructor(private ilService: IlService, private ilceService: IlceService, private tasinmazService: TasinmazService, private formBuilder: FormBuilder, private mahalleService: MahalleService, private router: Router) {
+  constructor(private ilService: IlService, private ilceService: IlceService, private tasinmazService: TasinmazService, private formBuilder: FormBuilder, private mahalleService: MahalleService, private router: Router, private authService:AuthService) {
     this.createTasinmazForm();
   }
 
   ngOnInit() {
     this.loadIller();
+    this.createTasinmazForm();
   }
 
   createTasinmazForm() {
@@ -61,6 +63,9 @@ export class AddComponent {
       koordinatBilgileri: ['', Validators.required],
       adres: ['', Validators.required],
     });
+  
+    // Formun doğru şekilde oluşturulduğunu ve değerlerin boş olmadığını kontrol edin
+    console.log(this.tasinmazForm.controls);
   }
 
   loadIller() {
@@ -162,19 +167,25 @@ export class AddComponent {
   }
 
   add(): void {
-    if (this.tasinmazForm.valid) {
-      this.newTasinmaz = new Tasinmaz(
-        parseInt(this.tasinmazForm.get("mahalleId").value),
-        this.tasinmazForm.get("id").value,
-        this.tasinmazForm.get("name").value,
+    console.log("a");
 
+    if (this.tasinmazForm.valid) {
+      console.log("b");
+     /* this.newTasinmaz = new Tasinmaz(
+        parseInt(
+        this.tasinmazForm.get("id").value),
+        this.tasinmazForm.get("name").value,
+        this.tasinmazForm.get("mahalleId").value,
         this.tasinmazForm.get("ada").value,
         this.tasinmazForm.get("parsel").value,
         this.tasinmazForm.get("nitelik").value,
         this.tasinmazForm.get("koordinatBilgileri").value,
-        this.tasinmazForm.get("adres").value
-      );
-  
+        this.tasinmazForm.get("adres").value*/
+      const a = this.tasinmazForm.value;
+      //const id = this.authService.getCurrentUserId();
+      const id = 17
+      this.newTasinmaz = new Tasinmaz(parseInt(a.mahalleId,10),a.ada,a.parsel,a.nitelik,a.koordinatBilgileri,a.adres,id);
+      console.log(this.newTasinmaz);
       console.log('New Tasinmaz:', this.newTasinmaz);
   
       this.tasinmazService.addTasinmaz(this.newTasinmaz).subscribe(response => {

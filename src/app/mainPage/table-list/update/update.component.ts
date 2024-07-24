@@ -131,7 +131,6 @@ export class UpdateComponent implements OnChanges, OnInit {
         this.updateTasinmazForm.get("koordinatBilgileri").value,
         this.updateTasinmazForm.get("adres").value,
         this.updateTasinmazForm.get("id").value,
-        this.updateTasinmazForm.get("name").value,
 
       );
   

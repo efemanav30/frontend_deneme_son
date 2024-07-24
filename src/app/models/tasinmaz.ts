@@ -13,16 +13,16 @@ export class Tasinmaz{
   il: number;
   ilce: number;
   selected: boolean;
+   userId:number;
 
 
- constructor(mahalleId:number , ada:string, parsel:string, nitelik:string, koordinatBilgileri:string, adres:string, il:number, ilce:number){
+ constructor(mahalleId:number , ada:string, parsel:string, nitelik:string, koordinatBilgileri:string, adres:string, userId:number){
     this.mahalleId = mahalleId;
     this.ada = ada;
     this.parsel = parsel;
     this.nitelik = nitelik;
     this.koordinatBilgileri = koordinatBilgileri;
     this.adres = adres;
-    this.il=il;
-    this.ilce=ilce;
+    this.userId = userId;
   }
 }
