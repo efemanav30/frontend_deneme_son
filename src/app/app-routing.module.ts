@@ -7,19 +7,18 @@ import { AddComponent } from './mainPage/table-list/add/add.component';
 import { MapComponent } from './mainPage/table-list/map/map.component';
 import { KullaniciComponent } from './kullanici/kullanici.component';
 import { LogComponent } from './log/log.component';
+import { LoginGuardService } from './mainPage/services/login-guard.service';
+import { AdminGuardService } from './mainPage/services/admin-guard.service';
+
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'table-list', component: TableListComponent },
-  { path: 'home', component: MapComponent, data: { title: 'Anasayfa' } },
-  { path: 'table-list', component: AddComponent },
-  { path: 'table-list', component: TableListComponent, data: { title: 'Mevcut Taşınmaz Listesi' }},
-  { path: 'log', component: LogComponent, data: { title: ' Log İşlemleri' } },
+  { path: 'table-list', component: TableListComponent, data: { title: 'Mevcut Taşınmaz Listesi' }, canActivate: [LoginGuardService] },
+  { path: 'add', component: AddComponent, canActivate: [LoginGuardService] },
+  { path: 'map', component: MapComponent, data: { title: 'Anasayfa' }, canActivate: [LoginGuardService] },
+  { path: 'log', component: LogComponent, data: { title: 'Log İşlemleri' }, canActivate: [LoginGuardService, AdminGuardService] },
+  { path: 'kullanici', component: KullaniciComponent, data: { title: 'Kullanıcı İşlemleri' }, canActivate: [LoginGuardService, AdminGuardService] },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'kullanici', component: KullaniciComponent, data: { title: ' Kullanıcı İşlemleri' } }
-  
-  // { path: '', redirectTo: '/login' },
-
-  //{ path: '**', redirectTo: '/login' }
+  { path: '**', redirectTo: '/login' }
 ];
 
 @NgModule({

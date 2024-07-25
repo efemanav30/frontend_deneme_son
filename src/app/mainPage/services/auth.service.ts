@@ -14,7 +14,8 @@ export class AuthService {
   userToken: any;
   decodedToken: any;
   jwtHelper: JwtHelperService = new JwtHelperService();
-  TOKEN_KEY = "token"
+  TOKEN_KEY = "token";
+  private ROLE_KEY = "role";
 
   login(LoginUser: LoginUser) {
     let headers = new HttpHeaders();
@@ -23,6 +24,7 @@ export class AuthService {
       .subscribe((data: any) => {
         this.saveToken(data.token); // Token'ı kaydettiğinizden emin olun
         this.decodedToken = this.jwtHelper.decodeToken(data.token);
+        localStorage.setItem(this.ROLE_KEY, this.decodedToken.role); // Rol bilgisini kaydet
         console.log(this.decodedToken); // Token'ın çözümlendiğinden emin olmak için
         this.router.navigateByUrl("/table-list");
       }, error => {
@@ -49,6 +51,9 @@ export class AuthService {
 
   logOut() {
     localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem('userId');
+    localStorage.removeItem(this.ROLE_KEY);
+    this.router.navigateByUrl("/login");
   }
 
   loggedIn() {
@@ -65,5 +70,13 @@ export class AuthService {
     if (!token) return null;
     const decodedToken = this.jwtHelper.decodeToken(token);
     return decodedToken ? decodedToken.nameid : null;
+  }
+
+  getRole(): string | null {
+    return localStorage.getItem(this.ROLE_KEY);
+  }
+
+  isAdmin(): boolean {
+    return this.getRole() === 'admin';
   }
 }

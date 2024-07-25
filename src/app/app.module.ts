@@ -20,6 +20,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LogComponent } from './log/log.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthService } from './mainPage/services/auth.service';
+import { AdminGuardService } from './mainPage/services/admin-guard.service';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,7 @@ import { AuthService } from './mainPage/services/auth.service';
     
     
   ],
-  providers: [TasinmazService,NgbActiveModal,AuthService],
+  providers: [TasinmazService,NgbActiveModal,AuthService,AdminGuardService],
   bootstrap: [AppComponent],
   entryComponents: [AddKullaniciComponent, UpdateKullaniciComponent,UpdateComponent] // Add this line
 
