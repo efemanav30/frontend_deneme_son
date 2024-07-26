@@ -26,6 +26,7 @@
     "@ng-select/ng-select": "^13.4.1",
     "bootstrap": "^5.3.3",
     "core-js": "^2.5.4",
+    "crypto-js": "^4.2.0",
     "file-saver": "^2.0.5",
     "ngx-pagination": "^5.0.0",
     "ol": "^5.3.3",

@@ -21,6 +21,8 @@ import { AuthService } from '../../services/auth.service';
 import { Il } from 'src/app/models/il';
 import { Ilce } from 'src/app/models/ilce';
 import { Mahalle } from 'src/app/models/mahalle';
+import { Log } from 'src/app/models/log';
+import { LogService } from '../../services/log.service';
 
 @Component({
   selector: 'app-add',
@@ -51,7 +53,8 @@ export class AddComponent implements OnInit {
     private formBuilder: FormBuilder,
     private mahalleService: MahalleService,
     private router: Router,
-    private authService: AuthService // AuthService'i ekleyin
+    private authService: AuthService,
+    private logService: LogService
   ) {
     this.createTasinmazForm();
   }
@@ -139,23 +142,23 @@ export class AddComponent implements OnInit {
           }),
         ],
         view: new View({
-          center: fromLonLat([35, 39]), // Başlangıç merkezi
-          zoom: 5 // Başlangıç zoom seviyesi
+          center: fromLonLat([35, 39]),
+          zoom: 5
         })
       });
 
       this.map.on('click', (event) => {
         const coords = toLonLat(event.coordinate);
-        this.onCoordinateSelected([coords[1], coords[0]]); // Enlem ve boylamı doğru sırayla kullanıyoruz
+        this.onCoordinateSelected([coords[1], coords[0]]);
       });
     }
     this.mapContainer.nativeElement.style.display = 'block';
-    this.map.updateSize(); // Harita boyutunu güncelle
+    this.map.updateSize();
   }
 
   onCoordinateSelected(coords: Coordinate): void {
     this.selectedCoordinate = {
-      lon: coords[1], // Lon ve Lat sıralamasını düzeltiyoruz
+      lon: coords[1],
       lat: coords[0],
     };
     this.tasinmazForm.patchValue({
@@ -174,7 +177,7 @@ export class AddComponent implements OnInit {
   add(): void {
     if (this.tasinmazForm.valid) {
       const a = this.tasinmazForm.value;
-      const id = this.authService.getCurrentUserId(); // userId'yi authService'den alıyoruz
+      const id = this.authService.getCurrentUserId();
       this.newTasinmaz = new Tasinmaz(
         parseInt(a.mahalleId, 10),
         a.ada,
@@ -195,7 +198,32 @@ export class AddComponent implements OnInit {
       }, error => {
         alert('Taşınmaz eklenirken bir hata oluştu.');
         console.error('Taşınmaz eklenirken bir hata oluştu', error);
+        this.logError(`Taşınmaz eklenirken hata oluştu: ${error.message}`);
       });
+    } else {
+      alert('Lütfen tüm gerekli alanları doldurun.');
+      this.logError('Gerekli alanlar doldurulmadı.');
     }
+  }
+
+  logError(message: string) {
+    const log: Log = {
+      kullaniciId: this.getUserId(),
+      durum: "Başarısız",
+      islemTip: "Taşınmaz Ekleme",
+      aciklama: message,
+      tarihveSaat: new Date(),
+      kullaniciTip: "Admin"
+    };
+
+    this.logService.add(log).subscribe(() => {
+      console.log('Hata loglandı.');
+    }, error => {
+      console.error('Loglama sırasında hata oluştu:', error);
+    });
+  }
+
+  getUserId(): number {
+    return 1;
   }
 }

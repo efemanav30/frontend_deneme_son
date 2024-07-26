@@ -59,4 +59,7 @@ searchLogs(searchTerm: string): Observable<any> {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+  addLog(log: Log): Observable<Log> {
+    return this.http.post<Log>(`${this.apiUrl}`, log);
+  }
 }
