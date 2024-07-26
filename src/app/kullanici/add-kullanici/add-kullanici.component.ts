@@ -9,6 +9,7 @@ import { KullaniciService } from 'src/app/mainPage/services/kullanici.service';
 })
 export class AddKullaniciComponent implements OnInit {
   kullaniciForm: FormGroup;
+  roles: string[] = ['admin', 'user'];
 
   constructor(
     private fb: FormBuilder,

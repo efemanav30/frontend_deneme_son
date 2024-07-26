@@ -4,6 +4,8 @@ import { TasinmazService } from 'src/app/tasinmaz.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UpdateComponent } from './update/update.component';
 import * as XLSX from 'xlsx';
+import { LogService } from '../services/log.service';
+import { Log } from 'src/app/models/log';
 
 @Component({
   selector: 'app-table-list',
@@ -13,9 +15,11 @@ import * as XLSX from 'xlsx';
 export class TableListComponent implements OnInit {
   tasinmazlar: Tasinmaz[] = [];
   coordinates: { lon: number; lat: number; }[];
+  searchKeyword: string = '';
 
   constructor(private tasinmazService: TasinmazService,
-              private modalService: NgbModal) { }
+              private modalService: NgbModal,
+              private logService: LogService) { }
 
   ngOnInit() {
     this.loadTasinmazlar();
@@ -60,14 +64,24 @@ export class TableListComponent implements OnInit {
     } else {
       alert('Silmek için hiçbir taşınmaz seçilmedi.');
       console.log('Silmek için hiçbir taşınmaz seçilmedi');
+      const log: Log = {
+        kullaniciId: this.getUserId(), // Kullanıcı ID'yi alın
+        durum: "Başarısız",
+        islemTip: "Taşınmaz Silme",
+        aciklama: "Silme işlemi yapılırken hiçbir taşınmaz seçilmedi.",
+        tarihveSaat: new Date(),
+        kullaniciTip: "User" // Giriş yapan kullanıcının tipini alın
+      };
+      this.logService.add(log).subscribe(() => {
+        console.log('Silme işlemi loglandı.');
+      }, error => {
+        console.error('Loglama sırasında hata oluştu:', error);
+      });
     }
   }
 
   openUpdateModal() {
     const selectedTasinmaz = this.tasinmazlar.find(tasinmaz => tasinmaz.selected);
-    console.log(selectedTasinmaz);
-    console.log('seçilen taşınmaz id: ', selectedTasinmaz.id);
-
     if (selectedTasinmaz) {
       const modalRef = this.modalService.open(UpdateComponent);
       modalRef.componentInstance.tasinmazId = selectedTasinmaz.id;
@@ -82,6 +96,19 @@ export class TableListComponent implements OnInit {
     } else {
       alert('Düzenlemek için hiçbir taşınmaz seçilmedi.');
       console.log('Düzenlemek için hiçbir taşınmaz seçilmedi');
+      const log: Log = {
+        kullaniciId: this.getUserId(), // Kullanıcı ID'yi alın
+        durum: "Başarısız",
+        islemTip: "Taşınmaz Düzenleme",
+        aciklama: "Düzenleme işlemi yapılırken hiçbir taşınmaz seçilmedi.",
+        tarihveSaat: new Date(),
+        kullaniciTip: "User" // Giriş yapan kullanıcının tipini alın
+      };
+      this.logService.add(log).subscribe(() => {
+        console.log('Düzenleme işlemi loglandı.');
+      }, error => {
+        console.error('Loglama sırasında hata oluştu:', error);
+      });
     }
   }
 
@@ -101,5 +128,25 @@ export class TableListComponent implements OnInit {
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.tasinmazlar);
     const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
     XLSX.writeFile(workbook, 'tasinmazlar.xlsx');
+  }
+
+  searchTasinmaz() {
+    if (this.searchKeyword.trim() === '') {
+      this.loadTasinmazlar();
+    } else {
+      this.tasinmazService.searchTasinmazlar(this.searchKeyword).subscribe(
+        (data: Tasinmaz[]) => {
+          this.tasinmazlar = data;
+        },
+        error => {
+          console.error('Taşınmazlar aranırken bir hata oluştu:', error);
+        }
+      );
+    }
+  }
+
+  getUserId(): number {
+    // Kullanıcı ID'sini almak için gerekli işlemleri burada yapın
+    return 1; // Örnek ID, gerçek uygulamada oturumdan alınmalı
   }
 }

@@ -30,5 +30,8 @@ export class KullaniciService {
     return this.http.put<User>(`${this.userApiUrl}/${id}`, user, { headers });
   }
 
+  addUser(user: User): Observable<User> {
+    return this.http.post<User>(`${this.userApiUrl}`, user);
+  }
   
 }

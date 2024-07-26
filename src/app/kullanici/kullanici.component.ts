@@ -5,6 +5,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UpdateKullaniciComponent } from './update-kullanici/update-kullanici.component';
 import { AddKullaniciComponent } from './add-kullanici/add-kullanici.component';
 import * as XLSX from 'xlsx';
+import { LogService } from '../mainPage/services/log.service';
+import { Log } from '../models/log';
 
 @Component({
   selector: 'app-kullanici',
@@ -14,7 +16,7 @@ import * as XLSX from 'xlsx';
 export class KullaniciComponent implements OnInit {
   kullanicilar: User[] = [];
 
-  constructor(private kullaniciService: KullaniciService, private modalService: NgbModal) { }
+  constructor(private kullaniciService: KullaniciService, private modalService: NgbModal, private logService: LogService) { }
 
   ngOnInit(): void {
     this.getKullanicilar();
@@ -36,6 +38,19 @@ export class KullaniciComponent implements OnInit {
         });
       } else {
         alert('Lütfen silmek için bir kullanıcı seçin.');
+        const log: Log = {
+          kullaniciId: this.getUserId(),
+          durum: "Başarısız",
+          islemTip: "Kullanıcı Silme",
+          aciklama: "Silme işlemi yapılırken hiçbir kullanıcı seçilmedi.",
+          tarihveSaat: new Date(),
+          kullaniciTip: "User"
+        };
+        this.logService.add(log).subscribe(() => {
+          console.log('Silme işlemi loglandı.');
+        }, error => {
+          console.error('Loglama sırasında hata oluştu:', error);
+        });
       }
     }
   }
@@ -48,6 +63,19 @@ export class KullaniciComponent implements OnInit {
       modalRef.result.then(() => this.getKullanicilar(), () => {});
     } else {
       alert('Lütfen düzenlemek için bir kullanıcı seçin.');
+      const log: Log = {
+        kullaniciId: this.getUserId(),
+        durum: "Başarısız",
+        islemTip: "Kullanıcı Düzenleme",
+        aciklama: "Düzenleme işlemi yapılırken hiçbir kullanıcı seçilmedi.",
+        tarihveSaat: new Date(),
+        kullaniciTip: "User"
+      };
+      this.logService.add(log).subscribe(() => {
+        console.log('Düzenleme işlemi loglandı.');
+      }, error => {
+        console.error('Loglama sırasında hata oluştu:', error);
+      });
     }
   }
 
@@ -70,5 +98,10 @@ export class KullaniciComponent implements OnInit {
     XLSX.utils.book_append_sheet(wb, ws, 'Users');
 
     XLSX.writeFile(wb, 'users_list.xlsx');
+  }
+
+  getUserId(): number {
+    // Kullanıcı ID'sini almak için gerekli işlemleri burada yapın
+    return 1; // Örnek ID, gerçek uygulamada oturumdan alınmalı
   }
 }

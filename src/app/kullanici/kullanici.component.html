@@ -17,7 +17,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let kullanici of kullanicilar">
+          <tr *ngFor="let kullanici of kullanicilar | paginate: { itemsPerPage: 10, currentPage: page }">
             <td><input type="checkbox" [(ngModel)]="kullanici.selected" (change)="selectRow(kullanici)"></td>
             <td>{{ kullanici.name }}</td>
             <td>{{ kullanici.surname }}</td>
@@ -28,6 +28,7 @@
           </tr>
         </tbody>
       </table>
+      <pagination-controls (pageChange)="page = $event"></pagination-controls>
     </div>
   
     <ng-template #noData>

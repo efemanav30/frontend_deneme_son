@@ -16,17 +16,18 @@ export class TasinmazService {
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  private getAuthHeaders(): HttpHeaders {
-    return new HttpHeaders().set('Authorization', `Bearer ${this.authService.getToken()}`);
+  getTasinmazlar(): Observable<Tasinmaz[]> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.authService.getToken()}`);
+    return this.http.get<Tasinmaz[]>(`${this.apiUrl}Tasinmaz`, { headers });
   }
 
-  getTasinmazlar(): Observable<Tasinmaz[]> {
-    const headers = this.getAuthHeaders();
-    return this.http.get<Tasinmaz[]>(`${this.apiUrl}Tasinmaz`, { headers });
+  searchTasinmazlar(keyword: string): Observable<Tasinmaz[]> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.authService.getToken()}`);
+    return this.http.get<Tasinmaz[]>(`${this.apiUrl}Tasinmaz/search?keyword=${keyword}`, { headers });
   }
   
   addTasinmaz(tasinmaz: Tasinmaz): Observable<Tasinmaz> {
-    const headers = this.getAuthHeaders();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.authService.getToken()}`);
     return this.http.post<Tasinmaz>(`${this.apiUrl}Tasinmaz`, tasinmaz, { headers });
   }
   
@@ -38,22 +39,22 @@ export class TasinmazService {
     return this.http.get<Ilce[]>(`${this.apiUrl}ilce/getBySehirId/${sehirId}`);
   }
 
-  getMahallelerByIlceId(ilceId: number): Observable<Mahalle[]> {
+  getMahallelerByIlceId(ilceId : number): Observable<Mahalle[]> {
     return this.http.get<Mahalle[]>(`${this.apiUrl}mahalle/getByIlceId/${ilceId}`);
   }
   
   deleteTasinmaz(id: number): Observable<void> {
-    const headers = this.getAuthHeaders();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.authService.getToken()}`);
     return this.http.delete<void>(`${this.apiUrl}Tasinmaz/${id}`, { headers });
   }
 
   updateTasinmaz(id: number, tasinmaz: Tasinmaz): Observable<Tasinmaz> {
-    const headers = this.getAuthHeaders();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.authService.getToken()}`);
     return this.http.put<Tasinmaz>(`${this.apiUrl}Tasinmaz/${id}`, tasinmaz, { headers });
   }
 
   getTasinmazById(id: number): Observable<Tasinmaz> {
-    const headers = this.getAuthHeaders();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.authService.getToken()}`);
     return this.http.get<Tasinmaz>(`${this.apiUrl}Tasinmaz/${id}`, { headers });
   }
 }

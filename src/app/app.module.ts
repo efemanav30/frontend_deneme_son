@@ -21,6 +21,8 @@ import { LogComponent } from './log/log.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthService } from './mainPage/services/auth.service';
 import { AdminGuardService } from './mainPage/services/admin-guard.service';
+import { LogDetailsComponent } from './log/log-details/log-details.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -35,6 +37,7 @@ import { AdminGuardService } from './mainPage/services/admin-guard.service';
     AddKullaniciComponent,
     UpdateKullaniciComponent,
     LogComponent,
+    LogDetailsComponent,
     
    
     
@@ -46,6 +49,7 @@ import { AdminGuardService } from './mainPage/services/admin-guard.service';
     FormsModule,
     ReactiveFormsModule,
     NgbModule,
+    NgxPaginationModule,
     JwtModule
     
     

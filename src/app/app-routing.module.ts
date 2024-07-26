@@ -7,6 +7,7 @@ import { AddComponent } from './mainPage/table-list/add/add.component';
 import { MapComponent } from './mainPage/table-list/map/map.component';
 import { KullaniciComponent } from './kullanici/kullanici.component';
 import { LogComponent } from './log/log.component';
+import { LogDetailsComponent } from './log/log-details/log-details.component';
 import { LoginGuardService } from './mainPage/services/login-guard.service';
 import { AdminGuardService } from './mainPage/services/admin-guard.service';
 
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'add', component: AddComponent, canActivate: [LoginGuardService] },
   { path: 'map', component: MapComponent, data: { title: 'Anasayfa' }, canActivate: [LoginGuardService] },
   { path: 'log', component: LogComponent, data: { title: 'Log İşlemleri' }, canActivate: [LoginGuardService, AdminGuardService] },
+  { path: 'log-details', component: LogDetailsComponent, data: { title: 'Log Detayları' }, canActivate: [AdminGuardService] },
   { path: 'kullanici', component: KullaniciComponent, data: { title: 'Kullanıcı İşlemleri' }, canActivate: [LoginGuardService, AdminGuardService] },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/login' }

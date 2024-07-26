@@ -1,5 +1,5 @@
 export interface Log {
-    id: number;
+    id?: number;
     kullaniciId: number;
     durum: string;
     islemTip: string;
