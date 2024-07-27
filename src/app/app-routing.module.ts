@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'log-details', component: LogDetailsComponent, data: { title: 'Log Detayları' }, canActivate: [AdminGuardService] },
   { path: 'kullanici', component: KullaniciComponent, data: { title: 'Kullanıcı İşlemleri' }, canActivate: [LoginGuardService, AdminGuardService] },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/login' }
+  //{ path: '**', redirectTo: '/login' }
 ];
 
 @NgModule({

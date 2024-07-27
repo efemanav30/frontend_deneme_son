@@ -10,12 +10,7 @@ import { Vector as VectorSource } from 'ol/source';
 import { Point } from 'ol/geom';
 import { Feature } from 'ol';
 import { Style, Fill, Stroke, Circle as CircleStyle } from 'ol/style';
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import OlTileLayer from 'ol/layer/Tile';
-import OlOSM from 'ol/source/OSM';
 import OlMousePosition from 'ol/control/MousePosition';
-
 
 @Component({
   selector: 'app-map',
@@ -25,7 +20,7 @@ import OlMousePosition from 'ol/control/MousePosition';
 export class MapComponent implements OnInit, OnChanges {
   @Input() coordinates: { lon: number, lat: number }[] = []; // Ana sayfadan koordinatları al
   @ViewChild('mousePosition') mousePosition: ElementRef;
-  mouseCoordinates: [0,0];
+  mouseCoordinates: [number, number] = [0, 0];
   map: Map;
   vectorSource: VectorSource;
   vectorLayer: VectorLayer<any>;
@@ -73,8 +68,7 @@ export class MapComponent implements OnInit, OnChanges {
     const mousePositionControl = new OlMousePosition({
       coordinateFormat: (coord) => {
         // Projeksiyondan coğrafi koordinatlara dönüştürme
-        const lonLat = toLonLat(coord);
-        return `Lon: ${lonLat[0].toFixed(2)}, Lat: ${lonLat[1].toFixed(2)}`;
+        return `X: ${coord[0].toFixed(2)}, Y: ${coord[1].toFixed(2)}`;
       },
       projection: 'EPSG:3857', // OpenLayers'in varsayılan projeksiyonu
       className: 'ol-mouse-position',
@@ -84,14 +78,10 @@ export class MapComponent implements OnInit, OnChanges {
     this.map.addControl(mousePositionControl);
 
     this.map.on('pointermove', (evt) => {
-      this.mouseCoordinates = evt.mouseCoordinates;
+      const coordinates = evt.coordinate;
+      this.updateMousePosition(coordinates[0], coordinates[1]);
     });
   }
-
-
-  
-
-  
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.coordinates && !changes.coordinates.firstChange) {
@@ -116,9 +106,9 @@ export class MapComponent implements OnInit, OnChanges {
     }
   }
 
-  updateMousePosition(lon: number, lat: number): void {
+  updateMousePosition(x: number, y: number): void {
     if (this.mousePosition) {
-      this.mousePosition.nativeElement.innerText = `Lon: ${lon.toFixed(6)}, Lat: ${lat.toFixed(6)}`;
+      this.mousePosition.nativeElement.innerText = `XS: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
     }
   }
 }

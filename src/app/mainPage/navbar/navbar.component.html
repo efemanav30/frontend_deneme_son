@@ -1,3 +1,4 @@
+<!-- navbar.component.html -->
 <div class="navbar1">
   <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -7,18 +8,18 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
+          <ul class="navbar-nav ms-auto">
             <li class="nav-item" *ngIf="authService.isAdmin()">
-              <a class="nav-link" aria-current="page" href="#" routerLink="/log" style="margin-left: 1050px;">Log İşlemleri</a>
+              <a class="nav-link" aria-current="page" routerLink="/log">Log İşlemleri</a>
             </li>
             <li class="nav-item" *ngIf="authService.isAdmin()">
               <a class="nav-link" aria-current="page" routerLink="/kullanici">Kullanıcı İşlemleri</a>
             </li>
             <li class="nav-item" *ngIf="authService.loggedIn()">
-              <a class="nav-link" href="#" routerLink="/table-list">Mevcut Taşınmaz Listesi</a>
+              <a class="nav-link" aria-current="page" routerLink="/table-list">Mevcut Taşınmaz Listesi</a>
             </li>
             <li class="nav-item" *ngIf="authService.loggedIn()">
-              <a class="nav-link" href="#" (click)="logOut()">Çıkış</a>
+              <a class="nav-link" (click)="confirmLogout()">Çıkış</a>
             </li>
           </ul>
         </div>

@@ -149,4 +149,5 @@ export class TableListComponent implements OnInit {
     // Kullanıcı ID'sini almak için gerekli işlemleri burada yapın
     return 1; // Örnek ID, gerçek uygulamada oturumdan alınmalı
   }
+  
 }

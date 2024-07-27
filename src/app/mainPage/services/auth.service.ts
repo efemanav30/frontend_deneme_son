@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { LoginUser } from 'src/app/models/loginUser';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
+import { LoginUser } from 'src/app/models/loginUser';
 import { RegisterUser } from 'src/app/models/registerUser';
 
 @Injectable({
@@ -49,13 +49,51 @@ export class AuthService {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
-  logOut() {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem('userId');
-    localStorage.removeItem(this.ROLE_KEY);
-    this.router.navigateByUrl("/login");
+ /* async logOut(): Promise<void> {
+    const confirmation = confirm('Çıkış yapmak istediğinizden emin misiniz?');
+    if (!confirmation) {
+      console.log('Çıkış iptal edildi.');
+      return; // Çıkış iptal edildiğinde metodu sonlandır
+    }
+    else{
+    try {
+      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.getToken());
+      await this.httpClient.post(this.path + 'logout', {}, { headers: headers }).toPromise();
+      localStorage.removeItem(this.TOKEN_KEY);
+      localStorage.removeItem('userId');
+      localStorage.removeItem(this.ROLE_KEY);
+      console.log('Çıkış başarılı'); // Logout işleminin başarılı olduğunu kontrol etmek için
+      alert('Çıkış başarılı.');
+      //this.router.navigateByUrl("/login");
+    } catch (error) {
+      alert('Çıkış işlemi sırasında bir hata oluştu.');
+      console.error('Çıkış işlemi sırasında bir hata oluştu', error);
+    }
   }
-
+  }*/
+  async logOut(): Promise<boolean> {
+    const confirmation = confirm('Çıkış yapmak istediğinizden emin misiniz?');
+    if (!confirmation) {
+      console.log('Çıkış iptal edildi.');
+      return false; // Logout cancelled
+    } else {
+      try {
+        const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.getToken());
+        await this.httpClient.post(this.path + 'logout', {}, { headers: headers }).toPromise();
+        localStorage.removeItem(this.TOKEN_KEY);
+        localStorage.removeItem('userId');
+        localStorage.removeItem(this.ROLE_KEY);
+        console.log('Çıkış başarılı'); // Logout işleminin başarılı olduğunu kontrol etmek için
+        alert('Çıkış başarılı.');
+        return true; // Logout successful
+      } catch (error) {
+        alert('Çıkış işlemi sırasında bir hata oluştu.');
+        console.error('Çıkış işlemi sırasında bir hata oluştu', error);
+        return false; // Logout failed
+      }
+    }
+  }
+  
   loggedIn() {
     const token = this.getToken();
     return !!token && !this.jwtHelper.isTokenExpired(token);
