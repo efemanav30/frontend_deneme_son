@@ -1,0 +1,46 @@
+/* Sidebar stilleri */
+#sidebar {
+  background-color: #8ac6f8;
+  color: #241111;
+  width: 300px;  /* Daha dar genişlik */
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  font-weight: 600;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);  /* Hafif gölge */
+  transition: all 0.3s ease;  /* Geçiş efekti */
+  padding-top: 20px;  /* Üstten boşluk */
+}
+
+#sidebar a {
+  color: #6157e9;
+  text-decoration: none;
+  padding: 15px 20px;  /* Daha dar padding */
+  display: block;
+  font-family: "Quicksand", sans-serif;
+  font-size: large;
+  transition: background-color 0.3s ease, color 0.3s ease;  /* Geçiş efektleri */
+}
+
+#sidebar a:hover {
+  background-color: #5b85bd;
+  color: #fff;  /* Hover'da yazı rengi beyaz */
+}
+
+/* İçerik stilleri */
+#main-content {
+  margin-left: 300px;  /* Sidebar genişliği kadar margin */
+  width: calc(100% - 300px);  /* Sabit genişliğe göre içerik genişliği ayarı */
+  padding: 20px;  /* İçerik kısmına padding ekleme */
+  transition: margin-left 0.3s ease, width 0.3s ease;  /* Geçiş efektleri */
+}
+
+/* Konteyner stilleri */
+.container {
+  background-color: #449fe9;
+  padding: 20px;  /* Daha fazla iç padding */
+  border-radius: 8px;  /* Kenar yuvarlama */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Hafif gölge */
+}

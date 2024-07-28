@@ -30,14 +30,18 @@ export class LogDetailsComponent implements OnInit {
   }
 
   searchLogs(): void {
-    this.logService.searchLogs(this.searchTerm).subscribe(
-      (data) => {
-        this.logs = data;
-      },
-      (error) => {
-        console.error('Hata:', error);
-      }
-    );
+    if (this.searchTerm.trim() === '') {
+      this.getLogs();
+    } else {
+      this.logService.searchLogs(this.searchTerm).subscribe(
+        (data) => {
+          this.logs = data;
+        },
+        (error) => {
+          console.error('Hata:', error);
+        }
+      );
+    }
   }
 
   selectAll(event: any): void {

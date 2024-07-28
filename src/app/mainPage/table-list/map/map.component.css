@@ -1,8 +1,9 @@
 
 .map {
-    width: 100%;
+    width: 1000px;
     height: 400px; 
     margin-top: 10px;
+    margin-right: auto;
   
   }
 
@@ -18,3 +19,21 @@
 
 
 
+
+
+.button-container {
+  display: flex;
+  justify-content: center; /* Butonları yatayda ortalar */
+  align-items: center; /* Butonları dikeyde ortalar */
+  gap: 20px; /* Butonlar arasındaki boşluğu artırır */
+  margin-top: 20px;
+}
+
+.button-container button {
+  padding: 10px 20px; /* Butonların iç boşluğunu artırır */
+  font-size: 16px; /* Buton metninin boyutunu ayarlar */
+}
+
+.button-container input[type="range"] {
+  margin-left: 20px; /* Slider ve buton arasındaki boşluğu artırır */
+}

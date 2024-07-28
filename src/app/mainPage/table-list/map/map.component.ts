@@ -2,15 +2,15 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges, ElementRef, ViewChi
 import Map from 'ol/Map';
 import View from 'ol/View';
 import OSM from 'ol/source/OSM';
-import { fromLonLat, toLonLat } from 'ol/proj';
-import { Coordinate } from 'ol/coordinate';
-import ScaleLine from 'ol/control/ScaleLine';
+import XYZ from 'ol/source/XYZ';
+import { fromLonLat } from 'ol/proj';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import { Vector as VectorSource } from 'ol/source';
 import { Point } from 'ol/geom';
 import { Feature } from 'ol';
 import { Style, Fill, Stroke, Circle as CircleStyle } from 'ol/style';
 import OlMousePosition from 'ol/control/MousePosition';
+import ScaleLine from 'ol/control/ScaleLine';
 
 @Component({
   selector: 'app-map',
@@ -20,10 +20,11 @@ import OlMousePosition from 'ol/control/MousePosition';
 export class MapComponent implements OnInit, OnChanges {
   @Input() coordinates: { lon: number, lat: number }[] = []; // Ana sayfadan koordinatları al
   @ViewChild('mousePosition') mousePosition: ElementRef;
-  mouseCoordinates: [number, number] = [0, 0];
   map: Map;
   vectorSource: VectorSource;
   vectorLayer: VectorLayer<any>;
+  osmLayer: TileLayer;
+  googleLayer: TileLayer;
 
   constructor() { }
 
@@ -42,12 +43,22 @@ export class MapComponent implements OnInit, OnChanges {
       })
     });
 
+    this.osmLayer = new TileLayer({
+      source: new OSM(),
+    });
+
+    this.googleLayer = new TileLayer({
+      source: new XYZ({
+        url: 'http://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}',
+      }),
+      visible: false, // Başlangıçta Google Maps katmanı görünmez
+    });
+
     this.map = new Map({
       target: 'map',
       layers: [
-        new TileLayer({
-          source: new OSM(),
-        }),
+        this.osmLayer,
+        this.googleLayer,
         this.vectorLayer
       ],
       view: new View({
@@ -110,5 +121,23 @@ export class MapComponent implements OnInit, OnChanges {
     if (this.mousePosition) {
       this.mousePosition.nativeElement.innerText = `XS: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
     }
+  }
+
+  toggleLayer(layer: string): void {
+    if (layer === 'osm') {
+      this.osmLayer.setVisible(true);
+      this.googleLayer.setVisible(false);
+    } else if (layer === 'google') {
+      this.osmLayer.setVisible(false);
+      this.googleLayer.setVisible(true);
+    }
+  }
+
+  changeOpacity(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    const opacity = Number(value);
+
+    this.osmLayer.setOpacity(opacity);
+    this.googleLayer.setOpacity(opacity);
   }
 }

@@ -1,0 +1,55 @@
+.tablo {
+    margin-left: 25%;
+  }
+  
+  .btn-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .btn1, .btn2, .btn3, .btn4 {
+    background-color: #63dd80; /* Varsayılan renk: yeşil */
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    border-radius: 20px;
+    border: none;
+    padding: 8px 20px;
+  }
+  
+  .btn1:hover {
+    background-color: #13df3f;
+  }
+  
+  .btn2 {
+    background-color: #db5e5e; /* Kırmızı renk */
+  }
+  
+  .btn2:hover {
+    background-color: #e4211e;
+  }
+  
+  .btn3 {
+    background-color: #d9e669; /* Sarı renk */
+  }
+  
+  .btn3:hover {
+    background-color: #d3e71c;
+  }
+
+  .btn4 {
+    background-color: #74bae9; /* Sarı renk */
+  }
+  
+  .btn4:hover {
+    background-color: #47e2e7;
+  }
+  
+  .btn1:focus, .btn2:focus, .btn3:focus, .btn4:focus {
+    outline: none;
+  }
+  

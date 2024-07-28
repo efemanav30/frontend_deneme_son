@@ -45,13 +45,7 @@
         Nitelik is required.
       </div>
     </div>
-    <div class="form-group">
-      <label for="koordinatBilgileri">Koordinat Bilgileri</label>
-      <input type="text" id="koordinatBilgileri" class="form-control" formControlName="koordinatBilgileri" [ngClass]="{'is-invalid': updateTasinmazForm.get('koordinatBilgileri').touched && updateTasinmazForm.get('koordinatBilgileri').invalid}">
-      <div *ngIf="updateTasinmazForm.get('koordinatBilgileri').touched && updateTasinmazForm.get('koordinatBilgileri').invalid" class="invalid-feedback">
-        Koordinat Bilgileri is required.
-      </div>
-    </div>
+    
     <div class="form-group">
       <label for="adres">Adres</label>
       <input type="text" id="adres" class="form-control" formControlName="adres" [ngClass]="{'is-invalid': updateTasinmazForm.get('adres').touched && updateTasinmazForm.get('adres').invalid}">
