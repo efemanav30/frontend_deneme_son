@@ -1,34 +1,57 @@
-<div class="modal-header">
-  <h4 class="modal-title">Kullanıcı Düzenle</h4>
-  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-<div class="modal-body">
-  <form>
-    <div class="form-group">
-      <label for="name">Ad</label>
-      <input type="text" class="form-control" id="name" [(ngModel)]="kullanici.name" name="name" required>
-    </div>
-    <div class="form-group">
-      <label for="surname">Soyad</label>
-      <input type="text" class="form-control" id="surname" [(ngModel)]="kullanici.surname" name="surname" required>
-    </div>
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input type="email" class="form-control" id="email" [(ngModel)]="kullanici.email" name="email" required>
-    </div>
-    <div class="form-group">
-      <label for="phone">Telefon</label>
-      <input type="text" class="form-control" id="phone" [(ngModel)]="kullanici.phone" name="phone" required>
-    </div>
-    <div class="form-group">
-      <label for="role">Rol</label>
-      <input type="text" class="form-control" id="role" [(ngModel)]="kullanici.role" name="role" required>
-    </div>
-  </form>
-</div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Kapat</button>
-  <button type="button" class="btn btn-primary" (click)="updateKullanici()">Güncelle</button>
+<div class="container">
+  <div class="modal-header">
+    <h4 class="modal-title">Kullanıcı Düzenle</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="kullaniciForm" (ngSubmit)="updateKullanici()">
+      <div class="form-group">
+        <label for="name">Ad</label>
+        <input type="text" class="form-control" id="name" formControlName="name" [ngClass]="{ 'is-invalid': isSubmitted && kullaniciForm.get('name').invalid }" />
+        <div *ngIf="kullaniciForm.get('name').invalid && (kullaniciForm.get('name').touched || isSubmitted)" class="text-danger">
+          <div *ngIf="kullaniciForm.get('name').hasError('required')">Ad zorunludur.</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="surname">Soyad</label>
+        <input type="text" class="form-control" id="surname" formControlName="surname" [ngClass]="{ 'is-invalid': isSubmitted && kullaniciForm.get('surname').invalid }" />
+        <div *ngIf="kullaniciForm.get('surname').invalid && (kullaniciForm.get('surname').touched || isSubmitted)" class="text-danger">
+          <div *ngIf="kullaniciForm.get('surname').hasError('required')">Soyad zorunludur.</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" formControlName="email" [ngClass]="{ 'is-invalid': isSubmitted && kullaniciForm.get('email').invalid }" />
+        <div *ngIf="kullaniciForm.get('email').invalid && (kullaniciForm.get('email').touched || isSubmitted)" class="text-danger">
+          <div *ngIf="kullaniciForm.get('email').hasError('required')">Email zorunludur.</div>
+          <div *ngIf="kullaniciForm.get('email').hasError('email')">Geçerli bir email adresi giriniz.</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="phone">Telefon</label>
+        <input type="text" class="form-control" id="phone" formControlName="phone" [ngClass]="{ 'is-invalid': isSubmitted && kullaniciForm.get('phone').invalid }" />
+        <div *ngIf="kullaniciForm.get('phone').invalid && (kullaniciForm.get('phone').touched || isSubmitted)" class="text-danger">
+          <div *ngIf="kullaniciForm.get('phone').hasError('required')">Telefon zorunludur.</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="adress">Adres</label>
+        <input type="text" class="form-control" id="adress" formControlName="adress" [ngClass]="{ 'is-invalid': isSubmitted && kullaniciForm.get('adress').invalid }" />
+        <div *ngIf="kullaniciForm.get('adress').invalid && (kullaniciForm.get('adress').touched || isSubmitted)" class="text-danger">
+          <div *ngIf="kullaniciForm.get('adress').hasError('required')">Adres zorunludur.</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="role">Rol</label>
+        <select class="form-control" id="role" formControlName="role" [ngClass]="{ 'is-invalid': isSubmitted && kullaniciForm.get('role').invalid }">
+          <option value="admin">admin</option>
+          <option value="user">user</option>
+        </select>
+        <div *ngIf="kullaniciForm.get('role').invalid && (kullaniciForm.get('role').touched || isSubmitted)" class="text-danger">
+          <div *ngIf="kullaniciForm.get('role').hasError('required')">Rol zorunludur.</div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Güncelle</button>
+    </form>
+  </div>
 </div>

@@ -1,11 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TasinmazService } from 'src/app/tasinmaz.service';
-import { Tasinmaz } from 'src/app/models/tasinmaz';
 import { IlService } from '../../services/il.service';
 import { IlceService } from '../../services/ilce.service';
 import { MahalleService } from '../../services/mahalle.service';
-import { Router } from '@angular/router';
 import { Map, View } from 'ol';
 import Tile from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
@@ -17,14 +15,14 @@ import VectorLayer from 'ol/layer/Vector';
 import { Style, Fill, Stroke, Circle as CircleStyle } from 'ol/style';
 import { Coordinate } from 'ol/coordinate';
 import { AuthService } from '../../services/auth.service';
-
-import { Il } from 'src/app/models/il';
-import { Ilce } from 'src/app/models/ilce';
-import { Mahalle } from 'src/app/models/mahalle';
-import { Log } from 'src/app/models/log';
 import { LogService } from '../../services/log.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Tasinmaz } from 'src/app/models/tasinmaz';
+import { Log } from 'src/app/models/log';
+import { Il } from 'src/app/models/il';
+import { Ilce } from 'src/app/models/ilce';
+import { Mahalle } from 'src/app/models/mahalle';
 
 @Component({
   selector: 'app-add',
@@ -47,6 +45,7 @@ export class AddComponent implements OnInit {
   showSuccessAlert: boolean = false;
   map: any;
   vectorSource: any;
+  isSubmitted = false;
 
   constructor(
     private ilService: IlService,
@@ -54,11 +53,10 @@ export class AddComponent implements OnInit {
     private tasinmazService: TasinmazService,
     private formBuilder: FormBuilder,
     private mahalleService: MahalleService,
-    private router: Router,
     private authService: AuthService,
     private logService: LogService,
     private toastr: ToastrService,
-    private activeModal: NgbActiveModal
+    public activeModal: NgbActiveModal
   ) {
     this.createTasinmazForm();
   }
@@ -187,40 +185,52 @@ export class AddComponent implements OnInit {
     this.showMap = false;
   }
 
-  add(): void {
+  onSubmit(): void {
+    this.isSubmitted = true;
     if (this.tasinmazForm.valid) {
-      const a = this.tasinmazForm.value;
-      const id = this.authService.getCurrentUserId();
-      this.newTasinmaz = new Tasinmaz(
-        parseInt(a.mahalleId, 10),
-        a.ada,
-        a.parsel,
-        a.nitelik,
-        a.koordinatBilgileri,
-        a.adres,
-        id
-      );
+      if (confirm('Bu taşınmazı eklemek istediğinize emin misiniz?')) {
+        const a = this.tasinmazForm.value;
+        const id = this.authService.getCurrentUserId();
+        this.newTasinmaz = new Tasinmaz(
+          parseInt(a.mahalleId, 10),
+          a.ada,
+          a.parsel,
+          a.nitelik,
+          a.koordinatBilgileri,
+          a.adres,
+          id
+        );
 
-      console.log('New Tasinmaz:', this.newTasinmaz);
+        console.log('New Tasinmaz:', this.newTasinmaz);
 
-      this.tasinmazService.addTasinmaz(this.newTasinmaz).subscribe(
-        (response) => {
-          this.toastr.success('Taşınmaz başarıyla eklendi.');
-          console.log('Taşınmaz başarıyla eklendi');
-          this.activeModal.close('save'); // Modal'ı kapat
-          // this.router.navigate(['/table-list']); // Yönlendirmeyi kaldırdık
-          location.reload();
-        },
-        (error) => {
-          this.toastr.error('Taşınmaz eklenirken bir hata oluştu.');
-          console.error('Taşınmaz eklenirken bir hata oluştu', error);
-          this.logError(`Taşınmaz eklenirken hata oluştu: ${error.message}`);
-        }
-      );
+        this.tasinmazService.addTasinmaz(this.newTasinmaz).subscribe(
+          (response) => {
+            this.toastr.success('Taşınmaz başarıyla eklendi.');
+            console.log('Taşınmaz başarıyla eklendi');
+            this.activeModal.close('save');
+            location.reload();
+          },
+          (error) => {
+            this.toastr.error('Taşınmaz eklenirken bir hata oluştu.');
+            console.error('Taşınmaz eklenirken bir hata oluştu', error);
+            this.logError(`Taşınmaz eklenirken hata oluştu: ${error.message}`);
+          }
+        );
+      }
     } else {
+      this.markFormGroupTouched(this.tasinmazForm);
       this.toastr.error('Lütfen tüm gerekli alanları doldurun.');
       this.logError('Gerekli alanlar doldurulmadı.');
     }
+  }
+
+  markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      }
+    });
   }
 
   logError(message: string) {
@@ -246,5 +256,9 @@ export class AddComponent implements OnInit {
   getUserId(): number {
     return 1;
   }
+
+  dismissModal() {
+    this.toastr.warning('Ekleme işleminden vazgeçildi.');
+    this.activeModal.dismiss('Cross click');
+  }
 }
- 

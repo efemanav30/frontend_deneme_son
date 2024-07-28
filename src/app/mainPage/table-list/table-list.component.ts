@@ -9,6 +9,7 @@ import { Log } from 'src/app/models/log';
 import { ToastrService } from 'ngx-toastr';
 import { AddComponent } from './add/add.component';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-table-list',
   templateUrl: './table-list.component.html',
@@ -18,70 +19,44 @@ export class TableListComponent implements OnInit {
   tasinmazlar: Tasinmaz[] = [];
   coordinates: { lon: number; lat: number; }[];
   searchKeyword: string = '';
+  selectedItems: Tasinmaz[] = [];
 
   constructor(private tasinmazService: TasinmazService,
               private modalService: NgbModal,
               private logService: LogService,
               public activeModal: NgbActiveModal, // Modal kontrolü için ekledik
-
               private toastr: ToastrService) { }
 
   ngOnInit() {
     this.loadTasinmazlar();
   }
 
-  openAddModal() {
-    const modalRef = this.modalService.open(AddComponent);
-    modalRef.result.then((result) => {
-      if (result === 'save') {
-        this.loadTasinmazlar();
-        this.activeModal.close('save');//EKLEDİKTEN SONRA MODAL KAPANIYOR
-      }
-    }, (reason) => {
-      console.log('Modal dismissed:', reason);
-    });
-  }
-  
-
-  loadTasinmazlar() {
-    this.tasinmazService.getTasinmazlar().subscribe(
-      data => {
-        this.tasinmazlar = data;
-        console.log('Loaded Tasinmazlar:', this.tasinmazlar);
-        if (this.tasinmazlar) {
-          this.extractCoordinates();
-        }
-      },
-      error => {
-        console.error('Error loading Tasinmazlar:', error);
-      }
-    );
+  selectAll(event: any) {
+    this.tasinmazlar.forEach(tasinmaz => tasinmaz.selected = event.target.checked);
+    this.updateSelectedItems();
   }
 
-  selectRow(selectedTasinmaz: Tasinmaz) {
-    this.tasinmazlar.forEach(tasinmaz => {
-      if (tasinmaz !== selectedTasinmaz) {
-        tasinmaz.selected = false;
-      }
-    });
+  updateSelectedItems() {
+    this.selectedItems = this.tasinmazlar.filter(tasinmaz => tasinmaz.selected);
   }
 
   deleteSelectedTasinmaz() {
-    const selectedTasinmaz = this.tasinmazlar.find(tasinmaz => tasinmaz.selected);
-    if (selectedTasinmaz) {
-      const confirmation = confirm('Silmek istediğinize emin misiniz?');
+    if (this.selectedItems.length > 0) {
+      const confirmation = confirm('Seçilen taşınmazları silmek istediğinize emin misiniz?');
       if (confirmation) {
-        this.tasinmazService.deleteTasinmaz(selectedTasinmaz.id).subscribe(() => {
-          console.log('Taşınmaz başarıyla silindi:', selectedTasinmaz);
-          this.toastr.success('Taşınmaz başarıyla silindi.');
-          this.loadTasinmazlar();
-        }, error => {
-          console.error('Taşınmaz silinirken bir hata oluştu:', error);
-          this.toastr.error('Taşınmaz silinirken bir hata oluştu.');
+        this.selectedItems.forEach(selectedTasinmaz => {
+          this.tasinmazService.deleteTasinmaz(selectedTasinmaz.id).subscribe(() => {
+            console.log('Taşınmaz başarıyla silindi:', selectedTasinmaz);
+            this.toastr.success('Taşınmaz başarıyla silindi.');
+            this.loadTasinmazlar();
+          }, error => {
+            console.error('Taşınmaz silinirken bir hata oluştu:', error);
+            this.toastr.error('Taşınmaz silinirken bir hata oluştu.');
+          });
         });
       }
     } else {
-      this.toastr.error('Silmek için hiçbir taşınmaz seçilmedi.');
+      this.toastr.error('Silmek için hiçbir taşınmaz seçilmedi.', 'Hata', { timeOut: 3000, closeButton: true, progressBar: true });
       console.log('Silmek için hiçbir taşınmaz seçilmedi');
       const log: Log = {
         kullaniciId: this.getUserId(), // Kullanıcı ID'yi alın
@@ -100,8 +75,8 @@ export class TableListComponent implements OnInit {
   }
 
   openUpdateModal() {
-    const selectedTasinmaz = this.tasinmazlar.find(tasinmaz => tasinmaz.selected);
-    if (selectedTasinmaz) {
+    if (this.selectedItems.length === 1) {
+      const selectedTasinmaz = this.selectedItems[0];
       const modalRef = this.modalService.open(UpdateComponent);
       modalRef.componentInstance.tasinmazId = selectedTasinmaz.id;
   
@@ -114,13 +89,13 @@ export class TableListComponent implements OnInit {
         console.log('Modal dismissed: ', reason);
       });
     } else {
-      this.toastr.warning('Düzenlemek için hiçbir taşınmaz seçilmedi.');
-      console.log('Düzenlemek için hiçbir taşınmaz seçilmedi');
+      this.toastr.error('Düzenlemek için yalnızca bir taşınmaz seçebilirsiniz.', 'Hata', { timeOut: 3000, closeButton: true, progressBar: true });
+      console.log('Düzenlemek için yalnızca bir taşınmaz seçebilirsiniz');
       const log: Log = {
         kullaniciId: this.getUserId(), // Kullanıcı ID'yi alın
         durum: "Başarısız",
         islemTip: "Taşınmaz Düzenleme",
-        aciklama: "Düzenleme işlemi yapılırken hiçbir taşınmaz seçilmedi.",
+        aciklama: "Düzenleme işlemi yapılırken birden fazla taşınmaz seçildi.",
         tarihveSaat: new Date(),
         kullaniciTip: "User" // Giriş yapan kullanıcının tipini alın
       };
@@ -131,7 +106,21 @@ export class TableListComponent implements OnInit {
       });
     }
   }
-  
+
+  loadTasinmazlar() {
+    this.tasinmazService.getTasinmazlar().subscribe(
+      data => {
+        this.tasinmazlar = data;
+        console.log('Loaded Tasinmazlar:', this.tasinmazlar);
+        if (this.tasinmazlar) {
+          this.extractCoordinates();
+        }
+      },
+      error => {
+        console.error('Error loading Tasinmazlar:', error);
+      }
+    );
+  }
 
   extractCoordinates(): void {
     if (!this.tasinmazlar || this.tasinmazlar.length === 0) {
@@ -145,10 +134,27 @@ export class TableListComponent implements OnInit {
     console.log("Coordinates to be sent to the map:", this.coordinates);
   }
 
-  exportToExcel(): void {
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.tasinmazlar);
+  exportSelectedToExcel(): void {
+    const selectedTasinmazlar = this.tasinmazlar.filter(tasinmaz => tasinmaz.selected);
+    if (selectedTasinmazlar.length === 0) {
+      this.toastr.error('Excel\'e aktarmak için en az bir taşınmaz seçin.', 'Hata', { timeOut: 3000, closeButton: true, progressBar: true });
+      return;
+    }
+
+    const data = selectedTasinmazlar.map(tasinmaz => ({
+      Ada: tasinmaz.ada,
+      Parsel: tasinmaz.parsel,
+      Nitelik: tasinmaz.nitelik,
+      KoordinatBilgileri: tasinmaz.koordinatBilgileri,
+      Mahalle: tasinmaz.mahalle.name,
+      Ilce: tasinmaz.mahalle.ilce.name,
+      Il: tasinmaz.mahalle.ilce.il.name,
+      Adres: tasinmaz.adres
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
     const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-    XLSX.writeFile(workbook, 'tasinmazlar.xlsx');
+    XLSX.writeFile(workbook, 'selected_tasinmazlar.xlsx');
   }
 
   searchTasinmaz() {

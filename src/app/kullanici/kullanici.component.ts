@@ -18,7 +18,11 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class KullaniciComponent implements OnInit {
   kullanicilar: User[] = [];
+  filteredKullanicilar: User[] = [];
   kullaniciForm: FormGroup;
+  searchKeyword: string = '';
+  selectedItems: User[] = [];
+  page: number = 1;
 
   constructor(
     private kullaniciService: KullaniciService,
@@ -58,19 +62,21 @@ export class KullaniciComponent implements OnInit {
 
   addKullanici() {
     if (this.kullaniciForm.valid) {
-      const formValues = this.kullaniciForm.value;
-      const hashedPassword = sha256(formValues.password).toString();
-      const newUser = { ...formValues, password: hashedPassword };
+      if (confirm('Bu kullanıcıyı eklemek istediğinize emin misiniz?')) {
+        const formValues = this.kullaniciForm.value;
+        const hashedPassword = sha256(formValues.password).toString();
+        const newUser = { ...formValues, password: hashedPassword };
 
-      this.kullaniciService.add(newUser).subscribe(() => {
-        this.toastr.success('Kullanıcı başarıyla eklendi.');
-        this.kullaniciForm.reset();
-        this.getKullanicilar();
-      }, error => {
-        this.toastr.error('Kullanıcı eklenirken bir hata oluştu.');
-        console.error('Kullanıcı eklenirken bir hata oluştu', error);
-        this.logError(`Kullanıcı eklenirken hata oluştu: ${error.message}`);
-      });
+        this.kullaniciService.add(newUser).subscribe(() => {
+          this.toastr.success('Kullanıcı başarıyla eklendi.');
+          this.kullaniciForm.reset();
+          this.getKullanicilar();
+        }, error => {
+          this.toastr.error('Kullanıcı eklenirken bir hata oluştu.');
+          console.error('Kullanıcı eklenirken bir hata oluştu', error);
+          this.logError(`Kullanıcı eklenirken hata oluştu: ${error.message}`);
+        });
+      }
     } else {
       this.toastr.warning('Lütfen tüm gerekli alanları doldurun.');
       this.logError('Gerekli alanlar doldurulmadı.');
@@ -80,32 +86,59 @@ export class KullaniciComponent implements OnInit {
   getKullanicilar(): void {
     this.kullaniciService.getAll().subscribe(data => {
       this.kullanicilar = data;
+      this.filteredKullanicilar = this.kullanicilar;
     });
   }
 
+  searchKullanicilar() {
+    if (this.searchKeyword.trim() === '') {
+      this.filteredKullanicilar = this.kullanicilar;
+    } else {
+      this.filteredKullanicilar = this.kullanicilar.filter(kullanici =>
+        kullanici.name.toLowerCase().includes(this.searchKeyword.toLowerCase()) ||
+        kullanici.surname.toLowerCase().includes(this.searchKeyword.toLowerCase()) ||
+        kullanici.email.toLowerCase().includes(this.searchKeyword.toLowerCase()) ||
+        kullanici.phone.toLowerCase().includes(this.searchKeyword.toLowerCase()) ||
+        kullanici.adress.toLowerCase().includes(this.searchKeyword.toLowerCase()) ||
+        kullanici.role.toLowerCase().includes(this.searchKeyword.toLowerCase())
+      );
+    }
+  }
+
+  selectAll(event: any) {
+    this.filteredKullanicilar.forEach(kullanici => kullanici.selected = event.target.checked);
+    this.updateSelectedItems();
+  }
+
+  updateSelectedItems() {
+    this.selectedItems = this.filteredKullanicilar.filter(kullanici => kullanici.selected);
+  }
+
   deleteSelectedKullanicilar(): void {
-    const selectedKullanici = this.kullanicilar.find(kullanici => kullanici.selected);
-    if (selectedKullanici) {
-      const confirmation = confirm('Silmek istediğinize emin misiniz?');
+    if (this.selectedItems.length > 0) {
+      const confirmation = confirm('Seçilen kullanıcıları silmek istediğinize emin misiniz?');
       if (confirmation) {
-        this.kullaniciService.delete(selectedKullanici.id).subscribe(() => {
-          this.kullanicilar = this.kullanicilar.filter(k => k.id !== selectedKullanici.id);
-          this.toastr.success('Kullanıcı başarıyla silindi.');
-        }, error => {
-          this.toastr.error('Kullanıcı silinirken bir hata oluştu.');
-          console.error('Kullanıcı silinirken bir hata oluştu', error);
-          this.logError(`Kullanıcı silinirken hata oluştu: ${error.message}`);
+        this.selectedItems.forEach(selectedKullanici => {
+          this.kullaniciService.delete(selectedKullanici.id).subscribe(() => {
+            this.kullanicilar = this.kullanicilar.filter(k => k.id !== selectedKullanici.id);
+            this.filteredKullanicilar = this.filteredKullanicilar.filter(k => k.id !== selectedKullanici.id);
+            this.toastr.success('Kullanıcı başarıyla silindi.');
+          }, error => {
+            this.toastr.error('Kullanıcı silinirken bir hata oluştu.');
+            console.error('Kullanıcı silinirken bir hata oluştu', error);
+            this.logError(`Kullanıcı silinirken hata oluştu: ${error.message}`);
+          });
         });
       }
     } else {
-      this.toastr.warning('Lütfen silmek için bir kullanıcı seçin.');
+      this.toastr.error('Silmek için hiçbir kullanıcı seçilmedi.', 'Hata', { timeOut: 3000, closeButton: true, progressBar: true });
       this.logError('Silme işlemi yapılırken hiçbir kullanıcı seçilmedi.');
     }
   }
 
   openUpdateModal(): void {
-    const selectedKullanici = this.kullanicilar.find(kullanici => kullanici.selected);
-    if (selectedKullanici) {
+    if (this.selectedItems.length === 1) {
+      const selectedKullanici = this.selectedItems[0];
       const modalRef = this.modalService.open(UpdateKullaniciComponent);
       modalRef.componentInstance.kullanici = selectedKullanici;
       modalRef.result.then(() => {
@@ -116,6 +149,9 @@ export class KullaniciComponent implements OnInit {
           this.toastr.warning('Kullanıcı güncelleme işlemi iptal edildi.');
         }
       });
+    } else if (this.selectedItems.length > 1) {
+      this.toastr.warning('Birden fazla kullanıcı seçildi. Lütfen yalnızca bir kullanıcı seçin.');
+      this.logError('Düzenleme işlemi yapılırken birden fazla kullanıcı seçildi.');
     } else {
       this.toastr.warning('Lütfen düzenlemek için bir kullanıcı seçin.');
       this.logError('Düzenleme işlemi yapılırken hiçbir kullanıcı seçilmedi.');
@@ -140,23 +176,37 @@ export class KullaniciComponent implements OnInit {
         kullanici.selected = false;
       }
     });
+    this.updateSelectedItems();
   }
 
   exportSelectedToExcel(): void {
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.kullanicilar);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Users');
-    XLSX.writeFile(wb, 'users_list.xlsx');
+    const selectedUsers = this.selectedItems.map(user => ({
+      Ad: user.name,
+      Soyad: user.surname,
+      Email: user.email,
+      Telefon: user.phone,
+      Adres: user.adress,
+      Rol: user.role
+    }));
+
+    if (selectedUsers.length === 0) {
+      this.toastr.error('Excel\'e aktarmak için en az bir kullanıcı seçin.', 'Hata', { timeOut: 3000, closeButton: true, progressBar: true });
+      return;
+    }
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(selectedUsers);
+    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    XLSX.writeFile(workbook, 'selected_users.xlsx');
   }
 
   logError(message: string) {
     const log: Log = {
       kullaniciId: this.getUserId(),
-      durum: "Başarısız",
-      islemTip: "Kullanıcı İşlemi",
+      durum: 'Başarısız',
+      islemTip: 'Kullanıcı İşlemi',
       aciklama: message,
       tarihveSaat: new Date(),
-      kullaniciTip: "User"
+      kullaniciTip: 'User'
     };
     this.logService.add(log).subscribe(() => {
       console.log('Hata loglandı.');

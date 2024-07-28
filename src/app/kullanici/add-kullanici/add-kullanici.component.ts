@@ -5,6 +5,8 @@ import { KullaniciService } from 'src/app/mainPage/services/kullanici.service';
 import { LogService } from 'src/app/mainPage/services/log.service';
 import { Log } from 'src/app/models/log';
 import { User } from 'src/app/models/kullanici';
+import { ToastrService } from 'ngx-toastr';
+import * as sha256 from 'crypto-js/sha256';
 
 @Component({
   selector: 'app-add-kullanici',
@@ -13,12 +15,14 @@ import { User } from 'src/app/models/kullanici';
 })
 export class AddKullaniciComponent {
   kullaniciForm: FormGroup;
-  
+  isSubmitted = false;
+
   constructor(
     private fb: FormBuilder,
     private kullaniciService: KullaniciService,
     private logService: LogService,
-    public activeModal: NgbActiveModal
+    public activeModal: NgbActiveModal,
+    private toastr: ToastrService
   ) {
     this.kullaniciForm = this.fb.group({
       name: ['', Validators.required],
@@ -46,33 +50,37 @@ export class AddKullaniciComponent {
     return !passwordValid ? { 'passwordInvalid': true } : null;
   }
 
-  addKullanici(): void {
+  onSubmit(): void {
+    this.isSubmitted = true;
     if (this.kullaniciForm.valid) {
-      const kullanici: User = this.kullaniciForm.value;
+      if (confirm('Bu kullanıcıyı eklemek istediğinize emin misiniz?')) {
+        const formValues = this.kullaniciForm.value;
+        const hashedPassword = sha256(formValues.password).toString();
+        const kullanici: User = { ...formValues, password: hashedPassword };
 
-      this.kullaniciService.add(kullanici).subscribe(() => {
-        console.log("Kullanıcı başarıyla eklendi.");
-        alert('Kullanıcı başarıyla eklendi.');
-        this.activeModal.close();
-      }, error => {
-        console.error('Kullanıcı eklenemedi:', error);
-        alert('Kullanıcı eklenemedi.');
-        const log: Log = {
-          kullaniciId: this.getUserId(),
-          durum: "Başarısız",
-          islemTip: "Kullanıcı Ekleme",
-          aciklama: "Kullanıcı eklenemedi: " + error.message,
-          tarihveSaat: new Date(),
-          kullaniciTip: "User"
-        };
-        this.logService.add(log).subscribe(() => {
-          console.log('Hata loglandı.');
-        }, logError => {
-          console.error('Loglama sırasında hata oluştu:', logError);
+        this.kullaniciService.add(kullanici).subscribe(() => {
+          this.toastr.success('Kullanıcı başarıyla eklendi.');
+          this.activeModal.close();
+        }, error => {
+          this.toastr.error('Kullanıcı eklenemedi.', 'Hata', { timeOut: 3000, closeButton: true, progressBar: true });
+          console.error('Kullanıcı eklenemedi:', error);
+          const log: Log = {
+            kullaniciId: this.getUserId(),
+            durum: "Başarısız",
+            islemTip: "Kullanıcı Ekleme",
+            aciklama: "Kullanıcı eklenemedi: " + error.message,
+            tarihveSaat: new Date(),
+            kullaniciTip: "User"
+          };
+          this.logService.add(log).subscribe(() => {
+            console.log('Hata loglandı.');
+          }, logError => {
+            console.error('Loglama sırasında hata oluştu:', logError);
+          });
         });
-      });
+      }
     } else {
-      alert('Lütfen gerekli alanları doldurun.');
+      this.toastr.error('Lütfen gerekli alanları doldurun.', 'Hata', { timeOut: 3000, closeButton: true, progressBar: true });
       console.error('Form geçersiz:', this.kullaniciForm.errors);
       const log: Log = {
         kullaniciId: this.getUserId(),

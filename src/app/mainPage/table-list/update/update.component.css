@@ -24,3 +24,12 @@ form select, form input {
 form button {
     padding: 10px 20px; /* Butona padding ekle */
 }
+
+.is-invalid {
+    border-color: #dc3545;
+  }
+  
+  .invalid-feedback {
+    color: #dc3545;
+  }
+  

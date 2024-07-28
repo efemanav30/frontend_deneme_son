@@ -3,7 +3,7 @@ import { Ilce } from "./ilce";
 export class Mahalle{
     
     id : number;
-    ad : string;
+    name : string;
     IlceId : number;
     ilce: Ilce;
 }

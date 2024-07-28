@@ -1,99 +1,90 @@
 <div class="modal fade" id="addTasinmazModal" tabindex="-1" aria-labelledby="addTasinmazModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Yeni Taşınmaz Ekle</h5>
+        <button type="button" class="btn-close" aria-label="Kapat" (click)="dismissModal()"></button>
+      </div>
       <div class="modal-body">
-        <form [formGroup]="tasinmazForm" (ngSubmit)="add()">
-          <!-- İl Dropdown -->
+        <form [formGroup]="tasinmazForm">
           <div class="form-group">
             <label for="il">İl</label>
-            <select id="il" formControlName="il" (change)="onIlChange($event.target.value)" class="form-control">
+            <select id="il" formControlName="il" (change)="onIlChange($event.target.value)" class="form-control" [ngClass]="{ 'is-invalid': tasinmazForm.get('il').touched && tasinmazForm.get('il').invalid }">
               <option *ngFor="let il of iller" [value]="il.id">{{ il.name }}</option>
             </select>
-            <div *ngIf="tasinmazForm.get('il').invalid && tasinmazForm.get('il').touched" class="text-danger">
-              İl is required.
+            <div *ngIf="tasinmazForm.get('il').touched && tasinmazForm.get('il').invalid" class="invalid-feedback">
+              İl bilgileri zorunludur.
             </div>
           </div>
-
-          <!-- İlçe Dropdown -->
+      
           <div class="form-group">
             <label for="ilce">İlçe</label>
-            <select id="ilce" formControlName="ilce" (change)="onIlceChange($event.target.value)" class="form-control">
+            <select id="ilce" formControlName="ilce" (change)="onIlceChange($event.target.value)" class="form-control" [ngClass]="{ 'is-invalid': tasinmazForm.get('ilce').touched && tasinmazForm.get('ilce').invalid }">
               <option *ngFor="let ilce of ilceler" [value]="ilce.id">{{ ilce.name }}</option>
             </select>
-            <div *ngIf="tasinmazForm.get('ilce').invalid && tasinmazForm.get('ilce').touched" class="text-danger">
-              İlçe is required.
+            <div *ngIf="tasinmazForm.get('ilce').touched && tasinmazForm.get('ilce').invalid" class="invalid-feedback">
+              İlçe bilgileri zorunludur.
             </div>
           </div>
-
-          <!-- Mahalle Dropdown -->
+      
           <div class="form-group">
             <label for="mahalleId">Mahalle</label>
-            <select id="mahalleId" formControlName="mahalleId" class="form-control">
+            <select id="mahalleId" formControlName="mahalleId" class="form-control" [ngClass]="{ 'is-invalid': tasinmazForm.get('mahalleId').touched && tasinmazForm.get('mahalleId').invalid }">
               <option *ngFor="let mahalle of mahalleler" [value]="mahalle.id">{{ mahalle.name }}</option>
             </select>
-            <div *ngIf="tasinmazForm.get('mahalleId').invalid && tasinmazForm.get('mahalleId').touched" class="text-danger">
-              Mahalle is required.
+            <div *ngIf="tasinmazForm.get('mahalleId').touched && tasinmazForm.get('mahalleId').invalid" class="invalid-feedback">
+              Mahalle bilgileri zorunludur.
             </div>
           </div>
-
-          <!-- Ada Input -->
+      
           <div class="form-group">
             <label for="ada">Ada</label>
-            <input type="text" id="ada" formControlName="ada" class="form-control" />
-            <div *ngIf="tasinmazForm.get('ada').invalid && tasinmazForm.get('ada').touched" class="text-danger">
-              Ada is required.
+            <input type="text" id="ada" formControlName="ada" class="form-control" [ngClass]="{ 'is-invalid': tasinmazForm.get('ada').touched && tasinmazForm.get('ada').invalid }" />
+            <div *ngIf="tasinmazForm.get('ada').touched && tasinmazForm.get('ada').invalid" class="invalid-feedback">
+              Ada bilgileri zorunludur.
             </div>
           </div>
-
-          <!-- Parsel Input -->
+      
           <div class="form-group">
             <label for="parsel">Parsel</label>
-            <input type="text" id="parsel" formControlName="parsel" class="form-control" />
-            <div *ngIf="tasinmazForm.get('parsel').invalid && tasinmazForm.get('parsel').touched" class="text-danger">
-              Parsel is required.
+            <input type="text" id="parsel" formControlName="parsel" class="form-control" [ngClass]="{ 'is-invalid': tasinmazForm.get('parsel').touched && tasinmazForm.get('parsel').invalid }" />
+            <div *ngIf="tasinmazForm.get('parsel').touched && tasinmazForm.get('parsel').invalid" class="invalid-feedback">
+              Parsel bilgileri zorunludur.
             </div>
           </div>
-
-          <!-- Nitelik Input -->
+      
           <div class="form-group">
             <label for="nitelik">Nitelik</label>
-            <input type="text" id="nitelik" formControlName="nitelik" class="form-control" />
-            <div *ngIf="tasinmazForm.get('nitelik').invalid && tasinmazForm.get('nitelik').touched" class="text-danger">
-              Nitelik is required.
+            <input type="text" id="nitelik" formControlName="nitelik" class="form-control" [ngClass]="{ 'is-invalid': tasinmazForm.get('nitelik').touched && tasinmazForm.get('nitelik').invalid }" />
+            <div *ngIf="tasinmazForm.get('nitelik').touched && tasinmazForm.get('nitelik').invalid" class="invalid-feedback">
+              Nitelik bilgileri zorunludur.
             </div>
           </div>
-
-          <!-- Koordinat X Input -->
-          <div class="form-group mt-2">
-            <label for="coordinatxInput">Koordinat X</label>
-            <input type="text" class="form-control" id="coordinatxInput" placeholder="koordinatBilgileri X" formControlName="koordinatBilgileri" autocomplete="off"
-              [ngClass]="{'is-invalid': tasinmazForm.get('koordinatBilgileri').invalid && tasinmazForm.get('koordinatBilgileri').touched}" readonly>
-            <div *ngIf="tasinmazForm.get('koordinatBilgileri').invalid && tasinmazForm.get('koordinatBilgileri').touched" class="text-danger">
-              koordinat Bilgileri zorunludur.
+      
+          <div class="form-group">
+            <label for="koordinatBilgileri">Koordinat Bilgileri</label>
+            <input type="text" id="koordinatBilgileri" formControlName="koordinatBilgileri" class="form-control" [ngClass]="{ 'is-invalid': tasinmazForm.get('koordinatBilgileri').touched && tasinmazForm.get('koordinatBilgileri').invalid }" readonly />
+            <div *ngIf="tasinmazForm.get('koordinatBilgileri').touched && tasinmazForm.get('koordinatBilgileri').invalid" class="invalid-feedback">
+              Koordinat bilgileri zorunludur.
             </div>
           </div>
-
-          <!-- Adres Input -->
+      
           <div class="form-group">
             <label for="adres">Adres</label>
-            <input type="text" id="adres" formControlName="adres" class="form-control" />
-            <div *ngIf="tasinmazForm.get('adres').invalid && tasinmazForm.get('adres').touched" class="text-danger">
-              Adres is required.
+            <input type="text" id="adres" formControlName="adres" class="form-control" [ngClass]="{ 'is-invalid': tasinmazForm.get('adres').touched && tasinmazForm.get('adres').invalid }" />
+            <div *ngIf="tasinmazForm.get('adres').touched && tasinmazForm.get('adres').invalid" class="invalid-feedback">
+              Adres bilgileri zorunludur.
             </div>
           </div>
-
-          <!-- Harita Aç Button -->
+      
           <button type="button" class="btn btn-secondary" (click)="openMap()">Haritayı Aç</button>
-          <div #mapContainer id="map-container" class="map-container" style="width: 100%; height: 400px; display: none;"></div> <!-- Harita burada görünecek -->
-
-          <!-- Ekle Button -->
-          <button type="submit" class="btn btn-primary">Ekle</button>
+          <div #mapContainer id="map-container" class="map-container" style="width: 100%; height: 400px; display: none;"></div>
+      
+          <button type="button" class="btn btn-primary" (click)="onSubmit()">Ekle</button>
         </form>
       </div>
-
-      <!-- Modal Close Button -->
-      <div class="btn1 modal-header">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="dismissModal()">Kapat</button>
       </div>
     </div>
   </div>

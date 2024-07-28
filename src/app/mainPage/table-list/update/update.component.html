@@ -1,52 +1,67 @@
-<div class="modal-content">
-  <h2>Taşınmaz Düzenle</h2>
-  <form [formGroup]="updateTasinmazForm" (ngSubmit)="onSubmit()">
+<div class="modal-header">
+  <h5 class="modal-title">Taşınmaz Düzenle</h5>
+</div>
+<div class="modal-body">
+  <form [formGroup]="updateTasinmazForm">
     <div class="form-group">
-      <label for="il">İl:</label>
-      <select formControlName="il" (change)="onIlChange($event.target.value)">
-        <option *ngFor="let il of iller" [value]="il.id">{{ il.name }}</option>
-      </select>
+      <label for="il">İl</label>
+      <input type="text" id="il" class="form-control" formControlName="il" [ngClass]="{'is-invalid': updateTasinmazForm.get('il').touched && updateTasinmazForm.get('il').invalid}">
+      <div *ngIf="updateTasinmazForm.get('il').touched && updateTasinmazForm.get('il').invalid" class="invalid-feedback">
+        İl is required.
+      </div>
     </div>
-
     <div class="form-group">
-      <label for="ilce">İlçe:</label>
-      <select formControlName="ilce" (change)="onIlceChange($event.target.value)">
-        <option *ngFor="let ilce of ilceler" [value]="ilce.id">{{ ilce.name }}</option>
-      </select>
+      <label for="ilce">İlçe</label>
+      <input type="text" id="ilce" class="form-control" formControlName="ilce" [ngClass]="{'is-invalid': updateTasinmazForm.get('ilce').touched && updateTasinmazForm.get('ilce').invalid}">
+      <div *ngIf="updateTasinmazForm.get('ilce').touched && updateTasinmazForm.get('ilce').invalid" class="invalid-feedback">
+        İlçe is required.
+      </div>
     </div>
-
     <div class="form-group">
-      <label for="mahalle">Mahalle:</label>
-      <select formControlName="mahalle">
-        <option *ngFor="let mahalle of mahalleler" [value]="mahalle.id">{{ mahalle.name }}</option>
-      </select>
+      <label for="mahalle">Mahalle</label>
+      <input type="text" id="mahalle" class="form-control" formControlName="mahalle" [ngClass]="{'is-invalid': updateTasinmazForm.get('mahalle').touched && updateTasinmazForm.get('mahalle').invalid}">
+      <div *ngIf="updateTasinmazForm.get('mahalle').touched && updateTasinmazForm.get('mahalle').invalid" class="invalid-feedback">
+        Mahalle is required.
+      </div>
     </div>
-
     <div class="form-group">
-      <label for="ada">Ada:</label>
-      <input formControlName="ada" type="text" class="form-control" />
+      <label for="ada">Ada</label>
+      <input type="text" id="ada" class="form-control" formControlName="ada" [ngClass]="{'is-invalid': updateTasinmazForm.get('ada').touched && updateTasinmazForm.get('ada').invalid}">
+      <div *ngIf="updateTasinmazForm.get('ada').touched && updateTasinmazForm.get('ada').invalid" class="invalid-feedback">
+        Ada is required.
+      </div>
     </div>
-
     <div class="form-group">
-      <label for="parsel">Parsel:</label>
-      <input formControlName="parsel" type="text" class="form-control" />
+      <label for="parsel">Parsel</label>
+      <input type="text" id="parsel" class="form-control" formControlName="parsel" [ngClass]="{'is-invalid': updateTasinmazForm.get('parsel').touched && updateTasinmazForm.get('parsel').invalid}">
+      <div *ngIf="updateTasinmazForm.get('parsel').touched && updateTasinmazForm.get('parsel').invalid" class="invalid-feedback">
+        Parsel is required.
+      </div>
     </div>
-
     <div class="form-group">
-      <label for="nitelik">Nitelik:</label>
-      <input formControlName="nitelik" type="text" class="form-control" />
+      <label for="nitelik">Nitelik</label>
+      <input type="text" id="nitelik" class="form-control" formControlName="nitelik" [ngClass]="{'is-invalid': updateTasinmazForm.get('nitelik').touched && updateTasinmazForm.get('nitelik').invalid}">
+      <div *ngIf="updateTasinmazForm.get('nitelik').touched && updateTasinmazForm.get('nitelik').invalid" class="invalid-feedback">
+        Nitelik is required.
+      </div>
     </div>
-
     <div class="form-group">
-      <label for="koordinatBilgileri">Koordinat Bilgileri:</label>
-      <input formControlName="koordinatBilgileri" type="text" class="form-control" />
+      <label for="koordinatBilgileri">Koordinat Bilgileri</label>
+      <input type="text" id="koordinatBilgileri" class="form-control" formControlName="koordinatBilgileri" [ngClass]="{'is-invalid': updateTasinmazForm.get('koordinatBilgileri').touched && updateTasinmazForm.get('koordinatBilgileri').invalid}">
+      <div *ngIf="updateTasinmazForm.get('koordinatBilgileri').touched && updateTasinmazForm.get('koordinatBilgileri').invalid" class="invalid-feedback">
+        Koordinat Bilgileri is required.
+      </div>
     </div>
-
-    <div class="form-group mt-2">
-      <label for="adres">Adres:</label>
-      <input formControlName="adres" type="text" class="form-control" />
+    <div class="form-group">
+      <label for="adres">Adres</label>
+      <input type="text" id="adres" class="form-control" formControlName="adres" [ngClass]="{'is-invalid': updateTasinmazForm.get('adres').touched && updateTasinmazForm.get('adres').invalid}">
+      <div *ngIf="updateTasinmazForm.get('adres').touched && updateTasinmazForm.get('adres').invalid" class="invalid-feedback">
+        Adres is required.
+      </div>
     </div>
-
-    <button type="submit" class="btn btn-primary">Kaydet</button>
+    <button type="button" class="btn btn-primary" (click)="onSubmit()">Kaydet</button>
   </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="dismissModal()">Kapat</button>
 </div>

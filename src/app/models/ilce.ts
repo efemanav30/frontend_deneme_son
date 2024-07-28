@@ -2,7 +2,7 @@ import { Il } from "./il";
 
 export class Ilce{
     id : number;
-    ad : string;
+    name : string;
     IlId : number;
     il: Il;
 }
