@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/mainPage/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -8,9 +9,9 @@ import { AuthService } from 'src/app/mainPage/services/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private authService:AuthService) { }
+  constructor(private authService: AuthService, private toastr: ToastrService) { }
 
-  loginUser:any = {}
+  loginUser: any = {}
   ngOnInit(): void {
     const container = document.getElementById('container');
     const registerBtns = document.querySelectorAll('#register');
@@ -29,15 +30,15 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  login(){
+  login() {
     this.authService.login(this.loginUser);
   }
 
-  logOut(){
+  logOut() {
     this.authService.logOut();
   }
 
-  get isAuthenticated(){
+  get isAuthenticated() {
     return this.authService.loggedIn();
   }
 }

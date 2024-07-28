@@ -54,8 +54,8 @@
       <div class="form-group">
         <label for="role">Rol</label>
         <select id="role" formControlName="role" class="form-control">
-          <option value="Admin">Admin</option>
-          <option value="User">User</option>
+          <option value="admin">admin</option>
+          <option value="user">user</option>
         </select>
         <div *ngIf="kullaniciForm.get('role').invalid && kullaniciForm.get('role').touched" class="text-danger">
           <div *ngIf="kullaniciForm.get('role').hasError('required')">Rol zorunludur.</div>

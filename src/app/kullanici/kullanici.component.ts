@@ -9,6 +9,7 @@ import * as XLSX from 'xlsx';
 import { LogService } from '../mainPage/services/log.service';
 import { Log } from '../models/log';
 import * as sha256 from 'crypto-js/sha256';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-kullanici',
@@ -23,7 +24,8 @@ export class KullaniciComponent implements OnInit {
     private kullaniciService: KullaniciService,
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
-    private logService: LogService
+    private logService: LogService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -61,16 +63,16 @@ export class KullaniciComponent implements OnInit {
       const newUser = { ...formValues, password: hashedPassword };
 
       this.kullaniciService.add(newUser).subscribe(() => {
-        alert('Kullanıcı başarıyla eklendi.');
+        this.toastr.success('Kullanıcı başarıyla eklendi.');
         this.kullaniciForm.reset();
         this.getKullanicilar();
       }, error => {
-        alert('Kullanıcı eklenirken bir hata oluştu.');
+        this.toastr.error('Kullanıcı eklenirken bir hata oluştu.');
         console.error('Kullanıcı eklenirken bir hata oluştu', error);
         this.logError(`Kullanıcı eklenirken hata oluştu: ${error.message}`);
       });
     } else {
-      alert('Lütfen tüm gerekli alanları doldurun.');
+      this.toastr.warning('Lütfen tüm gerekli alanları doldurun.');
       this.logError('Gerekli alanlar doldurulmadı.');
     }
   }
@@ -88,15 +90,15 @@ export class KullaniciComponent implements OnInit {
       if (confirmation) {
         this.kullaniciService.delete(selectedKullanici.id).subscribe(() => {
           this.kullanicilar = this.kullanicilar.filter(k => k.id !== selectedKullanici.id);
-          alert('Kullanıcı başarıyla silindi.');
+          this.toastr.success('Kullanıcı başarıyla silindi.');
         }, error => {
-          alert('Kullanıcı silinirken bir hata oluştu.');
+          this.toastr.error('Kullanıcı silinirken bir hata oluştu.');
           console.error('Kullanıcı silinirken bir hata oluştu', error);
           this.logError(`Kullanıcı silinirken hata oluştu: ${error.message}`);
         });
       }
     } else {
-      alert('Lütfen silmek için bir kullanıcı seçin.');
+      this.toastr.warning('Lütfen silmek için bir kullanıcı seçin.');
       this.logError('Silme işlemi yapılırken hiçbir kullanıcı seçilmedi.');
     }
   }
@@ -106,16 +108,30 @@ export class KullaniciComponent implements OnInit {
     if (selectedKullanici) {
       const modalRef = this.modalService.open(UpdateKullaniciComponent);
       modalRef.componentInstance.kullanici = selectedKullanici;
-      modalRef.result.then(() => this.getKullanicilar(), () => {});
+      modalRef.result.then(() => {
+        this.getKullanicilar();
+        this.toastr.success('Kullanıcı başarıyla güncellendi.');
+      }, (reason) => {
+        if (reason !== 'save') {
+          this.toastr.warning('Kullanıcı güncelleme işlemi iptal edildi.');
+        }
+      });
     } else {
-      alert('Lütfen düzenlemek için bir kullanıcı seçin.');
+      this.toastr.warning('Lütfen düzenlemek için bir kullanıcı seçin.');
       this.logError('Düzenleme işlemi yapılırken hiçbir kullanıcı seçilmedi.');
     }
   }
 
   openAddModal(): void {
     const modalRef = this.modalService.open(AddKullaniciComponent);
-    modalRef.result.then(() => this.getKullanicilar(), () => {});
+    modalRef.result.then(() => {
+      this.getKullanicilar();
+      this.toastr.success('Kullanıcı başarıyla eklendi.');
+    }, (reason) => {
+      if (reason !== 'save') {
+        this.toastr.warning('Kullanıcı ekleme işlemi iptal edildi.');
+      }
+    });
   }
 
   selectRow(selectedKullanici: User): void {

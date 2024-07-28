@@ -1,1 +1,65 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import 'ngx-toastr/toastr';
+
+.toastr-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    min-width: 250px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.5s, transform 0.5s;
+    transform: translateY(-20px);
+    z-index: 1000;
+  }
+  
+  .toastr-container.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .toastr-container.success {
+    background-color: #28a745;
+    color: #fff;
+  }
+  
+  .toastr-container.error {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .toastr-container.warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+  
+  .toastr-container.info {
+    background-color: #17a2b8;
+    color: #fff;
+  }
+
+  /* NavBar renk ayarları */
+.navbar {
+    background-color: #343a40 !important; /* NavBar arka plan rengi */
+    color: #ffffff !important; /* NavBar metin rengi */
+  }
+  
+  .navbar a {
+    color: #ffffff !important; /* NavBar bağlantı rengi */
+  }
+  
+  .navbar a:hover {
+    color: #d3d3d3 !important; /* NavBar bağlantı rengi hover durumunda */
+  }
+  
+  /* Eğer NavBar'ın içindeki diğer elemanlar için de stil vermek isterseniz */
+  .navbar .navbar-brand {
+    color: #ffffff !important; /* Marka ismi rengi */
+  }
+  
+  .navbar .navbar-brand:hover {
+    color: #d3d3d3 !important; /* Marka ismi hover durumunda */
+  }
+  

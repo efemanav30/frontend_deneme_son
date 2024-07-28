@@ -23,6 +23,9 @@ import { AuthService } from './mainPage/services/auth.service';
 import { AdminGuardService } from './mainPage/services/admin-guard.service';
 import { LogDetailsComponent } from './log/log-details/log-details.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+
 
 @NgModule({
   declarations: [
@@ -50,8 +53,9 @@ import { NgxPaginationModule } from 'ngx-pagination';
     ReactiveFormsModule,
     NgbModule,
     NgxPaginationModule,
-    JwtModule
-    
+    JwtModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot()
     
   ],
   providers: [TasinmazService,NgbActiveModal,AuthService,AdminGuardService],

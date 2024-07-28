@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { LoginUser } from 'src/app/models/loginUser';
 import { RegisterUser } from 'src/app/models/registerUser';
+import { ToastrService } from 'ngx-toastr';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private httpClient: HttpClient, private router: Router) { }
+  constructor(private httpClient: HttpClient, private router: Router, private toastr: ToastrService) { }
   path = "https://localhost:44312/api/Auth/";
   userToken: any;
   decodedToken: any;
@@ -21,15 +24,36 @@ export class AuthService {
     let headers = new HttpHeaders();
     headers = headers.append("Content-Type", "application/json");
     this.httpClient.post(this.path + "login", LoginUser, { headers: headers })
+      .pipe(
+        catchError(this.handleError.bind(this))
+      )
       .subscribe((data: any) => {
-        this.saveToken(data.token); // Token'ı kaydettiğinizden emin olun
+        this.saveToken(data.token);
         this.decodedToken = this.jwtHelper.decodeToken(data.token);
-        localStorage.setItem(this.ROLE_KEY, this.decodedToken.role); // Rol bilgisini kaydet
-        console.log(this.decodedToken); // Token'ın çözümlendiğinden emin olmak için
+        localStorage.setItem(this.ROLE_KEY, this.decodedToken.role);
+        console.log(this.decodedToken);
         this.router.navigateByUrl("/table-list");
-      }, error => {
-        console.error("Login error: ", error); // Hata durumunu kontrol etmek için
       });
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred!';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      switch (error.status) {
+        case 401:
+          errorMessage = 'Email veya şifre hatalı.';
+          break;
+        case 404:
+          errorMessage = 'The requested resource was not found.';
+          break;
+        default:
+          errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      }
+    }
+    this.toastr.error(errorMessage);
+    return throwError(errorMessage);
   }
 
   saveToken(token: string) {
@@ -41,7 +65,10 @@ export class AuthService {
     headers = headers.append("Content-Type", "application/json");
     this.httpClient.post(this.path + "register", RegisterUser, { headers: headers })
       .subscribe(data => {
-        // Kayıt başarılı olduğunda yapılacak işlemler
+        alert("Kayıt başarılı.");
+      }, error => {
+        this.toastr.error("Kayıt başarısız.");
+        console.error("Register error: ", error);
       });
   }
 
@@ -49,33 +76,11 @@ export class AuthService {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
- /* async logOut(): Promise<void> {
-    const confirmation = confirm('Çıkış yapmak istediğinizden emin misiniz?');
-    if (!confirmation) {
-      console.log('Çıkış iptal edildi.');
-      return; // Çıkış iptal edildiğinde metodu sonlandır
-    }
-    else{
-    try {
-      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.getToken());
-      await this.httpClient.post(this.path + 'logout', {}, { headers: headers }).toPromise();
-      localStorage.removeItem(this.TOKEN_KEY);
-      localStorage.removeItem('userId');
-      localStorage.removeItem(this.ROLE_KEY);
-      console.log('Çıkış başarılı'); // Logout işleminin başarılı olduğunu kontrol etmek için
-      alert('Çıkış başarılı.');
-      //this.router.navigateByUrl("/login");
-    } catch (error) {
-      alert('Çıkış işlemi sırasında bir hata oluştu.');
-      console.error('Çıkış işlemi sırasında bir hata oluştu', error);
-    }
-  }
-  }*/
   async logOut(): Promise<boolean> {
     const confirmation = confirm('Çıkış yapmak istediğinizden emin misiniz?');
     if (!confirmation) {
       console.log('Çıkış iptal edildi.');
-      return false; // Logout cancelled
+      return false;
     } else {
       try {
         const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.getToken());
@@ -83,17 +88,17 @@ export class AuthService {
         localStorage.removeItem(this.TOKEN_KEY);
         localStorage.removeItem('userId');
         localStorage.removeItem(this.ROLE_KEY);
-        console.log('Çıkış başarılı'); // Logout işleminin başarılı olduğunu kontrol etmek için
+        console.log('Çıkış başarılı');
         alert('Çıkış başarılı.');
-        return true; // Logout successful
+        return true;
       } catch (error) {
         alert('Çıkış işlemi sırasında bir hata oluştu.');
         console.error('Çıkış işlemi sırasında bir hata oluştu', error);
-        return false; // Logout failed
+        return false;
       }
     }
   }
-  
+
   loggedIn() {
     const token = this.getToken();
     return !!token && !this.jwtHelper.isTokenExpired(token);
@@ -115,6 +120,7 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.getRole() === 'admin';
+    const role = this.getRole();
+    return role === 'admin';
   }
 }

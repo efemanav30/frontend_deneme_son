@@ -6,7 +6,9 @@ import { UpdateComponent } from './update/update.component';
 import * as XLSX from 'xlsx';
 import { LogService } from '../services/log.service';
 import { Log } from 'src/app/models/log';
-
+import { ToastrService } from 'ngx-toastr';
+import { AddComponent } from './add/add.component';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-table-list',
   templateUrl: './table-list.component.html',
@@ -19,11 +21,27 @@ export class TableListComponent implements OnInit {
 
   constructor(private tasinmazService: TasinmazService,
               private modalService: NgbModal,
-              private logService: LogService) { }
+              private logService: LogService,
+              public activeModal: NgbActiveModal, // Modal kontrolü için ekledik
+
+              private toastr: ToastrService) { }
 
   ngOnInit() {
     this.loadTasinmazlar();
   }
+
+  openAddModal() {
+    const modalRef = this.modalService.open(AddComponent);
+    modalRef.result.then((result) => {
+      if (result === 'save') {
+        this.loadTasinmazlar();
+        this.activeModal.close('save');//EKLEDİKTEN SONRA MODAL KAPANIYOR
+      }
+    }, (reason) => {
+      console.log('Modal dismissed:', reason);
+    });
+  }
+  
 
   loadTasinmazlar() {
     this.tasinmazService.getTasinmazlar().subscribe(
@@ -55,14 +73,15 @@ export class TableListComponent implements OnInit {
       if (confirmation) {
         this.tasinmazService.deleteTasinmaz(selectedTasinmaz.id).subscribe(() => {
           console.log('Taşınmaz başarıyla silindi:', selectedTasinmaz);
-          alert('Taşınmaz başarıyla silindi.');
+          this.toastr.success('Taşınmaz başarıyla silindi.');
           this.loadTasinmazlar();
         }, error => {
           console.error('Taşınmaz silinirken bir hata oluştu:', error);
+          this.toastr.error('Taşınmaz silinirken bir hata oluştu.');
         });
       }
     } else {
-      alert('Silmek için hiçbir taşınmaz seçilmedi.');
+      this.toastr.error('Silmek için hiçbir taşınmaz seçilmedi.');
       console.log('Silmek için hiçbir taşınmaz seçilmedi');
       const log: Log = {
         kullaniciId: this.getUserId(), // Kullanıcı ID'yi alın
@@ -85,16 +104,17 @@ export class TableListComponent implements OnInit {
     if (selectedTasinmaz) {
       const modalRef = this.modalService.open(UpdateComponent);
       modalRef.componentInstance.tasinmazId = selectedTasinmaz.id;
-
+  
       modalRef.result.then((result) => {
         if (result === 'save') {
           this.loadTasinmazlar(); // Düzenleme sonrası taşınmazları yeniden yükleyin
+          this.toastr.success('Taşınmaz başarıyla güncellendi.');
         }
       }, (reason) => {
         console.log('Modal dismissed: ', reason);
       });
     } else {
-      alert('Düzenlemek için hiçbir taşınmaz seçilmedi.');
+      this.toastr.warning('Düzenlemek için hiçbir taşınmaz seçilmedi.');
       console.log('Düzenlemek için hiçbir taşınmaz seçilmedi');
       const log: Log = {
         kullaniciId: this.getUserId(), // Kullanıcı ID'yi alın
@@ -111,6 +131,7 @@ export class TableListComponent implements OnInit {
       });
     }
   }
+  
 
   extractCoordinates(): void {
     if (!this.tasinmazlar || this.tasinmazlar.length === 0) {
@@ -149,5 +170,4 @@ export class TableListComponent implements OnInit {
     // Kullanıcı ID'sini almak için gerekli işlemleri burada yapın
     return 1; // Örnek ID, gerçek uygulamada oturumdan alınmalı
   }
-  
 }

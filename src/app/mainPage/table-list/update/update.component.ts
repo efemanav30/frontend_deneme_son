@@ -8,6 +8,8 @@ import { Mahalle } from 'src/app/models/mahalle';
 import { Ilce } from 'src/app/models/ilce';
 import { Il } from 'src/app/models/il';
 import { Tasinmaz } from 'src/app/models/tasinmaz';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap'; // Modal kontrolü için ekledik
+import { ToastrService } from 'ngx-toastr'; // Toastr için ekledik
 
 @Component({
   selector: 'app-update',
@@ -28,7 +30,9 @@ export class UpdateComponent implements OnChanges, OnInit {
     private tasinmazService: TasinmazService,
     private ilService: IlService,
     private ilceService: IlceService,
-    private mahalleService: MahalleService
+    private mahalleService: MahalleService,
+    public activeModal: NgbActiveModal, // Modal kontrolü için ekledik
+    private toastr: ToastrService // Toastr için ekledik
   ) {
     this.updateTasinmazForm = this.fb.group({
       il: ['', Validators.required],
@@ -120,38 +124,6 @@ export class UpdateComponent implements OnChanges, OnInit {
     }
   }
 
-  /*onSubmit() {
-    if (this.updateTasinmazForm.valid) {
-      // Formdan gelen değerler ile yeni Tasinmaz nesnesi oluşturun
-      this.tasinmaz = new Tasinmaz(parseInt(
-        this.updateTasinmazForm.get("mahalle").value,10), // Mahalle ID'si
-        this.updateTasinmazForm.get("ada").value,
-        this.updateTasinmazForm.get("parsel").value,
-        this.updateTasinmazForm.get("nitelik").value,
-        this.updateTasinmazForm.get("koordinatBilgileri").value,
-        this.updateTasinmazForm.get("adres").value,
-        this.updateTasinmazForm.get("id").value,
-
-      );
-  
-      // Güncelleme servisine gönderin
-      this.tasinmazService.updateTasinmaz(this.tasinmazId,this.tasinmaz).subscribe(
-        () => {
-          alert('Taşınmaz başarıyla güncellendi.');
-          console.log('Taşınmaz başarıyla güncellendi:', this.tasinmaz);
-          location.reload();
-        },
-        (error) => {
-          alert('Taşınmaz güncellenirken bir hata oluştu.');
-
-          console.error('Taşınmaz güncellenirken bir hata oluştu:', error);
-        }
-      );
-    } else {
-      console.log('Form geçerli değil'); // Formun geçerli olup olmadığını kontrol et
-    }
-  }
-  */
   onSubmit() {
     if (this.updateTasinmazForm.valid) {
       const formValues = this.updateTasinmazForm.value;
@@ -169,12 +141,11 @@ export class UpdateComponent implements OnChanges, OnInit {
   
       this.tasinmazService.updateTasinmaz(this.tasinmazId, this.tasinmaz).subscribe(
         () => {
-          alert('Taşınmaz başarıyla güncellendi.');
           console.log('Taşınmaz başarıyla güncellendi:', this.tasinmaz);
-          location.reload();
+          this.activeModal.close('save'); // Modal'ı kapat
         },
         (error) => {
-          alert('Taşınmaz güncellenirken bir hata oluştu.');
+          this.toastr.error('Taşınmaz güncellenirken bir hata oluştu.'); // Toastr hata mesajı
           console.error('Taşınmaz güncellenirken bir hata oluştu:', error);
         }
       );
@@ -182,6 +153,4 @@ export class UpdateComponent implements OnChanges, OnInit {
       console.log('Form geçerli değil'); // Formun geçerli olup olmadığını kontrol et
     }
   }
-  
-  
 }

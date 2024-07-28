@@ -23,6 +23,8 @@ import { Ilce } from 'src/app/models/ilce';
 import { Mahalle } from 'src/app/models/mahalle';
 import { Log } from 'src/app/models/log';
 import { LogService } from '../../services/log.service';
+import { ToastrService } from 'ngx-toastr';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-add',
@@ -54,7 +56,9 @@ export class AddComponent implements OnInit {
     private mahalleService: MahalleService,
     private router: Router,
     private authService: AuthService,
-    private logService: LogService
+    private logService: LogService,
+    private toastr: ToastrService,
+    private activeModal: NgbActiveModal
   ) {
     this.createTasinmazForm();
   }
@@ -77,11 +81,14 @@ export class AddComponent implements OnInit {
   }
 
   loadIller() {
-    this.ilService.getIller().subscribe((data) => {
-      this.iller = data;
-    }, (error) => {
-      console.error('İller yüklenirken hata oluştu', error);
-    });
+    this.ilService.getIller().subscribe(
+      (data) => {
+        this.iller = data;
+      },
+      (error) => {
+        console.error('İller yüklenirken hata oluştu', error);
+      }
+    );
   }
 
   onIlChange(ilId: number): void {
@@ -90,11 +97,14 @@ export class AddComponent implements OnInit {
   }
 
   loadIlceler(ilId: number): void {
-    this.ilceService.getIlcelerByIlId(ilId).subscribe(data => {
-      this.ilceler = data;
-    }, error => {
-      console.error('İlçeler yüklenirken hata oluştu', error);
-    });
+    this.ilceService.getIlcelerByIlId(ilId).subscribe(
+      (data) => {
+        this.ilceler = data;
+      },
+      (error) => {
+        console.error('İlçeler yüklenirken hata oluştu', error);
+      }
+    );
   }
 
   onIlceChange(ilceId: number): void {
@@ -103,12 +113,15 @@ export class AddComponent implements OnInit {
   }
 
   loadMahalleler(ilceId: number): void {
-    this.mahalleService.getMahallelerByIlceId(ilceId).subscribe(data => {
-      this.mahalleler = data;
-      console.log('API Response mahalle:', data);
-    }, error => {
-      console.error('Mahalleler yüklenirken hata oluştu', error);
-    });
+    this.mahalleService.getMahallelerByIlceId(ilceId).subscribe(
+      (data) => {
+        this.mahalleler = data;
+        console.log('API Response mahalle:', data);
+      },
+      (error) => {
+        console.error('Mahalleler yüklenirken hata oluştu', error);
+      }
+    );
   }
 
   openMap(): void {
@@ -125,7 +138,7 @@ export class AddComponent implements OnInit {
         target: this.mapContainer.nativeElement,
         layers: [
           new Tile({
-            source: new OSM()
+            source: new OSM(),
           }),
           new VectorLayer({
             source: this.vectorSource,
@@ -143,8 +156,8 @@ export class AddComponent implements OnInit {
         ],
         view: new View({
           center: fromLonLat([35, 39]),
-          zoom: 5
-        })
+          zoom: 5,
+        }),
       });
 
       this.map.on('click', (event) => {
@@ -162,7 +175,7 @@ export class AddComponent implements OnInit {
       lat: coords[0],
     };
     this.tasinmazForm.patchValue({
-      koordinatBilgileri: `${this.selectedCoordinate.lat.toFixed(6)}, ${this.selectedCoordinate.lon.toFixed(6)}`
+      koordinatBilgileri: `${this.selectedCoordinate.lat.toFixed(6)}, ${this.selectedCoordinate.lon.toFixed(6)}`,
     });
 
     const feature = new Feature({
@@ -190,18 +203,22 @@ export class AddComponent implements OnInit {
 
       console.log('New Tasinmaz:', this.newTasinmaz);
 
-      this.tasinmazService.addTasinmaz(this.newTasinmaz).subscribe(response => {
-        alert('Taşınmaz başarıyla eklendi.');
-        console.log('Taşınmaz başarıyla eklendi');
-        location.reload();
-        this.router.navigate(['/table-list']);
-      }, error => {
-        alert('Taşınmaz eklenirken bir hata oluştu.');
-        console.error('Taşınmaz eklenirken bir hata oluştu', error);
-        this.logError(`Taşınmaz eklenirken hata oluştu: ${error.message}`);
-      });
+      this.tasinmazService.addTasinmaz(this.newTasinmaz).subscribe(
+        (response) => {
+          this.toastr.success('Taşınmaz başarıyla eklendi.');
+          console.log('Taşınmaz başarıyla eklendi');
+          this.activeModal.close('save'); // Modal'ı kapat
+          // this.router.navigate(['/table-list']); // Yönlendirmeyi kaldırdık
+          location.reload();
+        },
+        (error) => {
+          this.toastr.error('Taşınmaz eklenirken bir hata oluştu.');
+          console.error('Taşınmaz eklenirken bir hata oluştu', error);
+          this.logError(`Taşınmaz eklenirken hata oluştu: ${error.message}`);
+        }
+      );
     } else {
-      alert('Lütfen tüm gerekli alanları doldurun.');
+      this.toastr.error('Lütfen tüm gerekli alanları doldurun.');
       this.logError('Gerekli alanlar doldurulmadı.');
     }
   }
@@ -209,21 +226,25 @@ export class AddComponent implements OnInit {
   logError(message: string) {
     const log: Log = {
       kullaniciId: this.getUserId(),
-      durum: "Başarısız",
-      islemTip: "Taşınmaz Ekleme",
+      durum: 'Başarısız',
+      islemTip: 'Taşınmaz Ekleme',
       aciklama: message,
       tarihveSaat: new Date(),
-      kullaniciTip: "Admin"
+      kullaniciTip: 'Admin',
     };
 
-    this.logService.add(log).subscribe(() => {
-      console.log('Hata loglandı.');
-    }, error => {
-      console.error('Loglama sırasında hata oluştu:', error);
-    });
+    this.logService.add(log).subscribe(
+      () => {
+        console.log('Hata loglandı.');
+      },
+      (error) => {
+        console.error('Loglama sırasında hata oluştu:', error);
+      }
+    );
   }
 
   getUserId(): number {
     return 1;
   }
 }
+ 
