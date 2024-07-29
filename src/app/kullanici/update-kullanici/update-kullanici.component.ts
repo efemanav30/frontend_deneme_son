@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { KullaniciService } from 'src/app/mainPage/services/kullanici.service';
 import { User } from 'src/app/models/kullanici';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -10,7 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './update-kullanici.component.html',
   styleUrls: ['./update-kullanici.component.css']
 })
-export class UpdateKullaniciComponent implements OnChanges {
+export class UpdateKullaniciComponent implements OnInit {
   @Input() kullanici: User;
   kullaniciForm: FormGroup;
   isSubmitted = false;
@@ -24,7 +24,7 @@ export class UpdateKullaniciComponent implements OnChanges {
     this.createForm();
   }
 
-  ngOnChanges() {
+  ngOnInit() {
     if (this.kullanici) {
       this.updateForm();
     }
@@ -59,7 +59,7 @@ export class UpdateKullaniciComponent implements OnChanges {
         const updatedUser = { ...this.kullanici, ...this.kullaniciForm.value };
         this.kullaniciService.update(this.kullanici.id, updatedUser).subscribe(
           () => {
-            this.toastr.success('Kullanıcı başarıyla güncellendi.');
+            //this.toastr.success('Kullanıcı başarıyla güncellendi.');
             this.activeModal.close();
           },
           error => {

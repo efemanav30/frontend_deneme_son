@@ -1,36 +1,36 @@
 <div class="container">
   <div class="modal-header">
     <h5 class="modal-title" id="addKullaniciModalLabel">Yeni Kullanıcı Ekle</h5>
-    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
   <div class="modal-body">
-    <form [formGroup]="kullaniciForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="kullaniciForm" (ngSubmit)="addKullanici()">
       <div class="form-group">
         <label for="name">Ad</label>
-        <input type="text" id="name" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': isSubmitted && kullaniciForm.get('name').invalid }" />
-        <div *ngIf="kullaniciForm.get('name').invalid && (kullaniciForm.get('name').touched || isSubmitted)" class="text-danger">
+        <input type="text" id="name" formControlName="name" class="form-control" />
+        <div *ngIf="kullaniciForm.get('name').invalid && kullaniciForm.get('name').touched" class="text-danger">
           <div *ngIf="kullaniciForm.get('name').hasError('required')">Ad zorunludur.</div>
         </div>
       </div>
       <div class="form-group">
         <label for="surname">Soyad</label>
-        <input type="text" id="surname" formControlName="surname" class="form-control" [ngClass]="{ 'is-invalid': isSubmitted && kullaniciForm.get('surname').invalid }" />
-        <div *ngIf="kullaniciForm.get('surname').invalid && (kullaniciForm.get('surname').touched || isSubmitted)" class="text-danger">
+        <input type="text" id="surname" formControlName="surname" class="form-control" />
+        <div *ngIf="kullaniciForm.get('surname').invalid && kullaniciForm.get('surname').touched" class="text-danger">
           <div *ngIf="kullaniciForm.get('surname').hasError('required')">Soyad zorunludur.</div>
         </div>
       </div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': isSubmitted && kullaniciForm.get('email').invalid }" />
-        <div *ngIf="kullaniciForm.get('email').invalid && (kullaniciForm.get('email').touched || isSubmitted)" class="text-danger">
+        <input type="email" id="email" formControlName="email" class="form-control" />
+        <div *ngIf="kullaniciForm.get('email').invalid && kullaniciForm.get('email').touched" class="text-danger">
           <div *ngIf="kullaniciForm.get('email').hasError('required')">Email zorunludur.</div>
           <div *ngIf="kullaniciForm.get('email').hasError('email')">Geçerli bir email adresi giriniz.</div>
         </div>
       </div>
       <div class="form-group">
         <label for="password">Şifre</label>
-        <input type="password" id="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': isSubmitted && kullaniciForm.get('password').invalid }" />
-        <div *ngIf="kullaniciForm.get('password').invalid && (kullaniciForm.get('password').touched || isSubmitted)" class="text-danger">
+        <input type="password" id="password" formControlName="password" class="form-control" />
+        <div *ngIf="kullaniciForm.get('password').invalid && kullaniciForm.get('password').touched" class="text-danger">
           <div *ngIf="kullaniciForm.get('password').hasError('required')">Şifre zorunludur.</div>
           <div *ngIf="kullaniciForm.get('password').hasError('passwordInvalid')">
             Şifre en az 8 karakter, 1 özel karakter, 1 harf ve 1 rakam içermelidir.
@@ -39,25 +39,25 @@
       </div>
       <div class="form-group">
         <label for="phone">Telefon</label>
-        <input type="text" id="phone" formControlName="phone" class="form-control" [ngClass]="{ 'is-invalid': isSubmitted && kullaniciForm.get('phone').invalid }" />
-        <div *ngIf="kullaniciForm.get('phone').invalid && (kullaniciForm.get('phone').touched || isSubmitted)" class="text-danger">
+        <input type="text" id="phone" formControlName="phone" class="form-control" />
+        <div *ngIf="kullaniciForm.get('phone').invalid && kullaniciForm.get('phone').touched" class="text-danger">
           <div *ngIf="kullaniciForm.get('phone').hasError('required')">Telefon zorunludur.</div>
         </div>
       </div>
       <div class="form-group">
         <label for="adress">Adres</label>
-        <input type="text" id="adress" formControlName="adress" class="form-control" [ngClass]="{ 'is-invalid': isSubmitted && kullaniciForm.get('adress').invalid }" />
-        <div *ngIf="kullaniciForm.get('adress').invalid && (kullaniciForm.get('adress').touched || isSubmitted)" class="text-danger">
+        <input type="text" id="adress" formControlName="adress" class="form-control" />
+        <div *ngIf="kullaniciForm.get('adress').invalid && kullaniciForm.get('adress').touched" class="text-danger">
           <div *ngIf="kullaniciForm.get('adress').hasError('required')">Adres zorunludur.</div>
         </div>
       </div>
       <div class="form-group">
         <label for="role">Rol</label>
-        <select id="role" formControlName="role" class="form-control" [ngClass]="{ 'is-invalid': isSubmitted && kullaniciForm.get('role').invalid }">
+        <select id="role" formControlName="role" class="form-control">
           <option value="admin">admin</option>
           <option value="user">user</option>
         </select>
-        <div *ngIf="kullaniciForm.get('role').invalid && (kullaniciForm.get('role').touched || isSubmitted)" class="text-danger">
+        <div *ngIf="kullaniciForm.get('role').invalid && kullaniciForm.get('role').touched" class="text-danger">
           <div *ngIf="kullaniciForm.get('role').hasError('required')">Rol zorunludur.</div>
         </div>
       </div>

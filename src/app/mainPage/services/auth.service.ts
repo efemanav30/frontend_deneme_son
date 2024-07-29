@@ -63,14 +63,22 @@ export class AuthService {
   register(RegisterUser: RegisterUser) {
     let headers = new HttpHeaders();
     headers = headers.append("Content-Type", "application/json");
+    
     this.httpClient.post(this.path + "register", RegisterUser, { headers: headers })
-      .subscribe(data => {
-        alert("Kayıt başarılı.");
-      }, error => {
-        this.toastr.error("Kayıt başarısız.");
-        console.error("Register error: ", error);
+      .subscribe({
+        next: (data: any) => {
+          // Burada data'yı console.log ile yazdırın
+          console.log('Kayıt başarılı verisi: ', data);
+          alert("Kayıt başarılı.");
+        },
+        error: (error: HttpErrorResponse) => {
+          // Burada hata detaylarını console.error ile yazdırın
+          console.error('Kayıt hatası: ', error);
+          this.toastr.error("Kayıt başarısız.");
+        }
       });
   }
+  
 
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);

@@ -44,6 +44,7 @@
       <div class="form-group">
         <label for="role">Rol</label>
         <select class="form-control" id="role" formControlName="role" [ngClass]="{ 'is-invalid': isSubmitted && kullaniciForm.get('role').invalid }">
+          <option value="">Seçiniz</option>
           <option value="admin">admin</option>
           <option value="user">user</option>
         </select>

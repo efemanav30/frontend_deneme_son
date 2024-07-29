@@ -33,14 +33,37 @@
 #main-content {
   margin-left: 300px;  /* Sidebar genişliği kadar margin */
   width: calc(100% - 300px);  /* Sabit genişliğe göre içerik genişliği ayarı */
-  padding: 20px;  /* İçerik kısmına padding ekleme */
+  padding: 10px;  /* İçerik kısmına padding ekleme */
   transition: margin-left 0.3s ease, width 0.3s ease;  /* Geçiş efektleri */
 }
 
 /* Konteyner stilleri */
 .container {
   background-color: #449fe9;
-  padding: 20px;  /* Daha fazla iç padding */
+  padding: 30px;  /* Daha fazla iç padding */
   border-radius: 8px;  /* Kenar yuvarlama */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Hafif gölge */
+}
+
+.nav-item{
+  margin-bottom: 15px;
+}
+
+.odakIcon {
+  margin-top: auto; /* Resmi en alta yerleştirmek için */
+  padding-top: 20px; /* İsteğe bağlı, resim ile içerik arasında boşluk bırakmak için */
+}
+.nav{
+  padding-top: 60px;
+}
+
+.navExit-item{
+  padding-top: 350px;
+  
+
+}
+
+.exit-link{
+  font-size: 1.5rem; /* Adjust the size as needed */
+  font-weight: bold; /* Optional: makes the text bold */
 }

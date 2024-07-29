@@ -16,14 +16,20 @@
       <li class="nav-item" *ngIf="authService.loggedIn()">
         <a class="nav-link " routerLink="/table-list">Mevcut Taşınmaz Listesi</a>
       </li>
-      <li class="nav-item" *ngIf="authService.loggedIn()">
-        <a class="nav-link " (click)="confirmLogout()">Çıkış</a>
+      <li class="navExit-item" *ngIf="authService.loggedIn()">
+        <a class="nav-link exit-link " (click)="confirmLogout()">Çıkış</a>
       </li>
+      <div class="odakIcon">
+        <img src="../../../assets/odak.png" alt="odakIcon" style="width: 80px; height: 80px;">
+      
+      </div>
     </ul>
+
   </div>
 
   <!-- Content -->
   <div class="flex-grow-1 p-3" style="margin-left: 250px;">
+
     <router-outlet></router-outlet>
   </div>
 </div>
