@@ -11,6 +11,9 @@ import { Feature } from 'ol';
 import { Style, Fill, Stroke, Circle as CircleStyle } from 'ol/style';
 import OlMousePosition from 'ol/control/MousePosition';
 import ScaleLine from 'ol/control/ScaleLine';
+import { Coordinate } from 'ol/coordinate';
+import {  toLonLat } from 'ol/proj';
+
 
 @Component({
   selector: 'app-map',
@@ -79,9 +82,9 @@ export class MapComponent implements OnInit, OnChanges {
     const mousePositionControl = new OlMousePosition({
       coordinateFormat: (coord) => {
         // Projeksiyondan coğrafi koordinatlara dönüştürme
-        return `X: ${coord[0].toFixed(2)}, Y: ${coord[1].toFixed(2)}`;
+        return `${coord[0].toFixed(5)},${coord[1].toFixed(5)}`;
       },
-      projection: 'EPSG:3857', // OpenLayers'in varsayılan projeksiyonu
+      projection: 'EPSG:4326', // OpenLayers'in varsayılan projeksiyonu
       className: 'ol-mouse-position',
       target: document.getElementById('mouse-position')
     });
@@ -118,8 +121,14 @@ export class MapComponent implements OnInit, OnChanges {
   }
 
   updateMousePosition(x: number, y: number): void {
+    // Ekran koordinatlarını harita koordinatlarına çevir
+    const mapCoordinate: Coordinate = this.map.getCoordinateFromPixel([x, y]);
+  
+    // Harita koordinatlarını (EPSG:3857) coğrafi koordinatlara (enlem, boylam) çevir
+    const lonLatCoordinate: Coordinate = toLonLat(mapCoordinate);
+  
     if (this.mousePosition) {
-      this.mousePosition.nativeElement.innerText = `XS: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
+      this.mousePosition.nativeElement.innerText = `Enlem: ${lonLatCoordinate[1].toFixed(6)}, Boylam: ${lonLatCoordinate[0].toFixed(6)}`;
     }
   }
 
